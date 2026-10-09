@@ -1,122 +1,84 @@
-name: Build Android APK and Play Store Bundle
+name: Build and Release Android APK
 
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [ main ]
   workflow_dispatch:
-    inputs:
-      create_release:
-        description: 'Publish release with APK and AAB assets'
-        required: false
-        default: 'true'
-        type: boolean
 
 permissions:
   contents: write
 
 jobs:
   build:
-    name: Build APK and Google Play AAB
+    name: Build & Publish APK
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js Environment
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci || npm install
+      - name: Install NPM Dependencies
+        run: npm install
 
-      - name: Build web application
+      - name: Build Web Application
         run: npm run build
 
-      - name: Setup Java 17
+      - name: Sync Capacitor Android
+        run: npx cap sync android
+
+      - name: Setup Java Development Kit (JDK 17)
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Verify Java environment
-        run: |
-          java -version
-          echo "JAVA_HOME is: $JAVA_HOME"
-          JAVA_MAJOR=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{print ($1 == "1" ? $2 : $1)}')
-          echo "Detected Java major version: $JAVA_MAJOR"
-          if [ -z "$JAVA_MAJOR" ] || [ "$JAVA_MAJOR" -lt 17 ]; then
-            echo "Error: Java 17 or higher is required."
-            exit 1
-          fi
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
-      - name: Sync Capacitor Android
-        run: npx cap sync android
+      - name: Grant Execute Permission to gradlew
+        run: chmod +x android/gradlew
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./android/gradlew
-
-      - name: Build Debug and Release APK
+      - name: Build Debug APK with Gradle
         run: |
           cd android
           ./gradlew assembleDebug --stacktrace
-          ./gradlew assembleRelease --stacktrace
 
-      - name: Build Release Bundle (AAB for Google Play Store)
+      - name: Prepare APK for Release
         run: |
-          cd android
-          ./gradlew bundleRelease --stacktrace
+          mkdir -p release-output
+          find android/app/build/outputs/apk -name "*.apk" -exec cp {} release-output/Al-Shahin-Quran-debug.apk \;
+          ls -la release-output/
 
-      - name: Rename and prepare build artifacts
-        run: |
-          mkdir -p build-output
-          # Copy Debug APK
-          if [ -f android/app/build/outputs/apk/debug/app-debug.apk ]; then
-            cp android/app/build/outputs/apk/debug/app-debug.apk build-output/Al-Muneer-Quran-debug.apk
-            echo "Debug APK ready: build-output/Al-Muneer-Quran-debug.apk"
-          fi
-          # Copy Release APK
-          if [ -f android/app/build/outputs/apk/release/app-release.apk ]; then
-            cp android/app/build/outputs/apk/release/app-release.apk build-output/Al-Muneer-Quran-release.apk
-            echo "Release APK ready: build-output/Al-Muneer-Quran-release.apk"
-          fi
-          # Copy Release Bundle (AAB for Google Play Store)
-          if [ -f android/app/build/outputs/bundle/release/app-release.aab ]; then
-            cp android/app/build/outputs/bundle/release/app-release.aab build-output/Al-Muneer-Quran-release.aab
-            echo "Play Store AAB ready: build-output/Al-Muneer-Quran-release.aab"
-          fi
-
-      - name: Upload APKs Artifact
+      - name: Upload APK as GitHub Action Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Al-Muneer-Quran-APKs
-          path: |
-            build-output/*.apk
-          if-no-files-found: error
+          name: Al-Shahin-Quran-debug-apk
+          path: release-output/Al-Shahin-Quran-debug.apk
 
-      - name: Upload Play Store AAB Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Al-Muneer-Quran-PlayStore-AAB
-          path: build-output/Al-Muneer-Quran-release.aab
-          if-no-files-found: warn
-
-      - name: Create GitHub Release
-        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.create_release == true)
+      - name: Create GitHub Release and Publish APK
         uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         with:
-          tag_name: v1.0.${{ github.run_number }}
-          name: Al Muneer Quran v1.0.${{ github.run_number }}
+          tag_name: v1.0.0
+          name: "Al-Shahin Quran v1.0.0 Release"
+          body: |
+            ## 📱 Al-Shahin Quran Android App
+            
+            Android ফোনে সরাসরি ইনস্টল করার জন্য নিচের **`Al-Shahin-Quran-debug.apk`** ফাইলটি ডাউনলোড করে ইনস্টল করুন।
+            
+            ### ✨ যা যা রয়েছে:
+            - পূর্ণাঙ্গ কুরআন তিলাওয়াত ও অডিও প্লেয়ার
+            - বাংলা ও ইংরেজি অনুবাদসহ বিস্তারিত তাফসির
+            - নামাজের ওয়াক্ত ও রমজান ক্যালেন্ডার
+            - ডিজিটাল তসবিহ ও দোয়া কালেকশন
           draft: false
           prerelease: false
-          generate_release_notes: true
-          files: |
-            build-output/Al-Muneer-Quran-debug.apk
-            build-output/Al-Muneer-Quran-release.apk
-            build-output/Al-Muneer-Quran-release.aab
+          files: release-output/Al-Shahin-Quran-debug.apk
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

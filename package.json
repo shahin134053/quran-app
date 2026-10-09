@@ -9,22 +9,15 @@
     "lint": "tsc",
     "preview": "vite preview",
     "cap:sync": "npm run build && npx cap sync",
-    "cap:open": "npx cap open android",
-    "cap:build:apk": "npm run cap:sync && cd android && ./gradlew assembleDebug",
-    "cap:build:bundle": "npm run cap:sync && cd android && ./gradlew bundleRelease"
+    "cap:open": "npx cap open android"
   },
   "dependencies": {
     "@capacitor/android": "^8.1.0",
     "@capacitor/core": "^8.1.0",
-    "@google/genai": "^1.45.0",
-    "firebase": "^12.10.0",
     "framer-motion": "^12.34.3",
     "lucide-react": "^0.564.0",
     "react": "^19.2.4",
-    "react-confetti": "^6.4.0",
-    "react-dom": "^19.2.4",
-    "react-markdown": "^10.1.0",
-    "react-use": "^17.6.0"
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.1.0",

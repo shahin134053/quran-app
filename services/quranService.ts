@@ -118,47 +118,23 @@ export const fetchSurahDetail = async (
 };
 
 export const fetchPrayerTimings = async (lat: number, lng: number): Promise<{ timings: PrayerTimings, hijri: HijriDate }> => {
-  const cacheKey = `prayer_timings_${new Date().toISOString().split('T')[0]}_${lat.toFixed(2)}_${lng.toFixed(2)}`;
-  try {
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) return JSON.parse(cached);
-
-    const response = await fetch(`${PRAYER_BASE_URL}/timings?latitude=${lat}&longitude=${lng}&method=2`);
-    const data = await response.json();
-    const result = {
-      timings: data.data.timings,
-      hijri: data.data.date.hijri
-    };
-    localStorage.setItem(cacheKey, JSON.stringify(result));
-    return result;
-  } catch (error) {
-    console.error("Failed to fetch prayer timings", error);
-    // Try to find any cached timings as fallback
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key?.startsWith('prayer_timings_')) {
-        return JSON.parse(localStorage.getItem(key)!);
-      }
-    }
-    throw error;
-  }
+  const response = await fetch(`${PRAYER_BASE_URL}/timings?latitude=${lat}&longitude=${lng}&method=2`);
+  const data = await response.json();
+  return {
+    timings: data.data.timings,
+    hijri: data.data.date.hijri
+  };
 };
 
 export const fetchRamadanCalendar = async (lat: number, lng: number, year: number): Promise<any[]> => {
-  const cacheKey = `ramadan_calendar_${year}_${lat.toFixed(2)}_${lng.toFixed(2)}`;
   try {
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) return JSON.parse(cached);
-
     // Fetch specifically for Ramadan (Month 9) of the given Hijri year
     const response = await fetch(`${PRAYER_BASE_URL}/hijriCalendar?latitude=${lat}&longitude=${lng}&method=2&month=9&year=${year}`);
     const data = await response.json();
-    localStorage.setItem(cacheKey, JSON.stringify(data.data));
     return data.data;
   } catch (error) {
     console.error("Failed to fetch Ramadan calendar", error);
-    const cached = localStorage.getItem(cacheKey);
-    return cached ? JSON.parse(cached) : [];
+    return [];
   }
 };
 
@@ -188,27 +164,6 @@ export const getRamadanCountdown = (hijri: HijriDate): number => {
     monthsLeft = (12 - currentMonth) + 9;
   }
   return (monthsLeft * 30) - currentDay;
-};
-
-export const fetchDailyAyah = async (lang: AppLanguage): Promise<any> => {
-  try {
-    const randomAyahNum = Math.floor(Math.random() * 6236) + 1;
-    const [arabicRes, transRes] = await Promise.all([
-      fetch(`${QURAN_BASE_URL}/ayah/${randomAyahNum}/quran-uthmani`),
-      fetch(`${QURAN_BASE_URL}/ayah/${randomAyahNum}/${TRANSLATION_MAP[lang]}`)
-    ]);
-    const arabicData = await arabicRes.json();
-    const transData = await transRes.json();
-    return {
-      arabic: arabicData.data.text,
-      translation: transData.data.text,
-      surah: transData.data.surah.englishName,
-      number: transData.data.numberInSurah
-    };
-  } catch (error) {
-    console.error("Failed to fetch daily ayah", error);
-    return null;
-  }
 };
 
 export const fetchRandomHadith = async (): Promise<Hadith> => {

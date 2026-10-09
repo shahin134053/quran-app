@@ -91,9 +91,7 @@ export const UI_TRANSLATIONS = {
     tryAgain: 'Try Again',
     correctOrder: 'Correct Order!',
     wrongOrder: 'Incorrect Order',
-    completed: 'Completed',
-    ramadan: 'Ramadan',
-    hijriAdjustment: 'Hijri Adjustment'
+    completed: 'Completed'
   },
   bn: {
     home: 'হোম',
@@ -186,9 +184,7 @@ export const UI_TRANSLATIONS = {
     tryAgain: 'আবার চেষ্টা করুন',
     correctOrder: 'সঠিক ক্রম!',
     wrongOrder: 'ভুল ক্রম',
-    completed: 'সম্পন্ন',
-    ramadan: 'রমজান',
-    hijriAdjustment: 'হিজরি তারিখ সমন্বয়'
+    completed: 'সম্পন্ন'
   },
   hi: {
     home: 'होम',
@@ -281,9 +277,7 @@ export const UI_TRANSLATIONS = {
     tryAgain: 'पुनः प्रयास करें',
     correctOrder: 'सही क्रम!',
     wrongOrder: 'गलत क्रम',
-    completed: 'पूरा हुआ',
-    ramadan: 'रमज़ान',
-    hijriAdjustment: 'हिजरी तिथि समायोजन'
+    completed: 'पूरा हुआ'
   },
   ar: {
     home: 'الرئيسية',
@@ -376,9 +370,7 @@ export const UI_TRANSLATIONS = {
     tryAgain: 'حاول مرة أخرى',
     correctOrder: 'ترتيب صحيح!',
     wrongOrder: 'ترتيب خاطئ',
-    completed: 'مكتمل',
-    ramadan: 'رمضان',
-    hijriAdjustment: 'تعديل التاريخ الهجري'
+    completed: 'مكتمل'
   }
 };
 

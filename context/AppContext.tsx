@@ -18,8 +18,6 @@ interface AppContextType {
   updateLastRead: (lastRead: LastRead) => void;
   userName: string;
   setUserName: (name: string) => void;
-  hijriAdjustment: number;
-  setHijriAdjustment: (adj: number) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -32,7 +30,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [bookmarks, setBookmarks] = useState<Bookmark[]>(() => JSON.parse(localStorage.getItem('bookmarks') || '[]'));
   const [lastRead, setLastRead] = useState<LastRead | null>(() => JSON.parse(localStorage.getItem('lastRead') || 'null'));
   const [userName, setUserName] = useState<string>(() => localStorage.getItem('userName') || '');
-  const [hijriAdjustment, setHijriAdjustment] = useState<number>(() => Number(localStorage.getItem('hijriAdj')) || 0);
 
   useEffect(() => {
     localStorage.setItem('lang', language);
@@ -42,7 +39,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
     localStorage.setItem('lastRead', JSON.stringify(lastRead));
     localStorage.setItem('userName', userName);
-    localStorage.setItem('hijriAdj', hijriAdjustment.toString());
 
     if (theme === ThemeMode.DARK) {
       document.documentElement.classList.add('dark');
@@ -53,7 +49,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       document.body.classList.add('bg-slate-50', 'text-slate-900');
       document.body.classList.remove('bg-slate-900', 'text-slate-100');
     }
-  }, [language, theme, arabicFontSize, translationFontSize, bookmarks, lastRead, userName, hijriAdjustment]);
+  }, [language, theme, arabicFontSize, translationFontSize, bookmarks, lastRead, userName]);
 
   const addBookmark = (bookmark: Bookmark) => {
     setBookmarks(prev => [...prev, bookmark]);
@@ -75,8 +71,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       translationFontSize, setTranslationFontSize,
       bookmarks, addBookmark, removeBookmark,
       lastRead, updateLastRead,
-      userName, setUserName,
-      hijriAdjustment, setHijriAdjustment
+      userName, setUserName
     }}>
       {children}
     </AppContext.Provider>
