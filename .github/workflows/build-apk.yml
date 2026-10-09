@@ -44,41 +44,71 @@ jobs:
       - name: Grant Execute Permission to gradlew
         run: chmod +x android/gradlew
 
-      - name: Build Debug APK with Gradle
+      - name: Generate Release Keystore
+        run: |
+          if [ ! -f android/app/release.keystore ]; then
+            keytool -genkeypair -v \
+              -keystore android/app/release.keystore \
+              -alias alshahin_key \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -storepass "ShahinQuranSecure2026" \
+              -keypass "ShahinQuranSecure2026" \
+              -dname "CN=Al-Shahin Quran, OU=Mobile, O=Al-Shahin, L=Dhaka, ST=Dhaka, C=BD"
+          fi
+
+      - name: Build Signed Release APK and App Bundle
         run: |
           cd android
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleRelease bundleRelease --stacktrace
 
-      - name: Prepare APK for Release
+      - name: Prepare APK and AAB for Release
         run: |
           mkdir -p release-output
-          find android/app/build/outputs/apk -name "*.apk" -exec cp {} release-output/Al-Shahin-Quran-debug.apk \;
+          # Copy Release APK
+          find android/app/build/outputs/apk/release -name "*.apk" -exec cp {} release-output/Al-Shahin-Quran-release.apk \;
+          # Copy Release AAB for Google Play Store
+          find android/app/build/outputs/bundle/release -name "*.aab" -exec cp {} release-output/Al-Shahin-Quran-release.aab \; || true
           ls -la release-output/
 
-      - name: Upload APK as GitHub Action Artifact
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Al-Shahin-Quran-debug-apk
-          path: release-output/Al-Shahin-Quran-debug.apk
+          name: Al-Shahin-Quran-release-artifacts
+          path: release-output/
 
       - name: Create GitHub Release and Publish APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         with:
-          tag_name: v1.0.0
-          name: "Al-Shahin Quran v1.0.0 Release"
+          tag_name: v1.0.1
+          name: "Al-Shahin Quran v1.0.1 (Signed Release)"
           body: |
-            ## 📱 Al-Shahin Quran Android App
+            ## 📱 Al-Shahin Quran Android App (Official Signed Release)
             
-            Android ফোনে সরাসরি ইনস্টল করার জন্য নিচের **`Al-Shahin-Quran-debug.apk`** ফাইলটি ডাউনলোড করে ইনস্টল করুন।
+            ### 📥 ডাউনলোড অপশন:
+            1. **`Al-Shahin-Quran-release.apk`**: সরাসরি আপনার অ্যান্ড্রয়েড ফোনে ইনস্টল করার জন্য অফিসিয়াল সাইনড রিলিজ APK।
+            2. **`Al-Shahin-Quran-release.aab`**: Google Play Console-এ পাবলিশ করার জন্য প্রস্তুত Android App Bundle।
             
-            ### ✨ যা যা রয়েছে:
-            - পূর্ণাঙ্গ কুরআন তিলাওয়াত ও অডিও প্লেয়ার
+            ---
+            
+            ### 🛡️ Google Play Protect নোটিশ কেন দেয় এবং কীভাবে ইনস্টল করবেন?
+            - **কারণ:** অ্যাপটি সরাসরি প্লে স্টোরের বাইরে (Sideload) থেকে ডাউনলোড করা হচ্ছে এবং এটি নতুন একটি অ্যাপ। গুগল প্লে প্রোটেকশন প্লে স্টোরের বাইরের যেকোনো নতুন অ্যাপ ইন্সটলের সময় সাধারণ সতর্কবার্তা বা "Blocked by Play Protect / Unrecognized Developer" নোটিশ প্রদর্শন করে।
+            - **ইনস্টল করার নিয়ম:** নোটিশটি এলে স্ক্রিনের **"More details" (বা বিস্তারিত)**-এ ক্লিক করুন, তারপর **"Install anyway" (বা তবুও ইনস্টল করুন)** বাটনে চাপ দিন। অ্যাপটি সম্পূর্ণ সুরক্ষিত ও নিরাপদ।
+            
+            ---
+            
+            ### ✨ অ্যাপের ফিচারসমূহ:
+            - পূর্ণাঙ্গ আল-কুরআন আরবি তিলাওয়াত ও ক্লিয়ার অডিও
             - বাংলা ও ইংরেজি অনুবাদসহ বিস্তারিত তাফসির
-            - নামাজের ওয়াক্ত ও রমজান ক্যালেন্ডার
-            - ডিজিটাল তসবিহ ও দোয়া কালেকশন
+            - নামাজের ওয়াক্ত ও সাহরি-ইফতারের সময়সূচি
+            - ডিজিটাল তাসবিহ ও দোয়া কালেকশন
           draft: false
           prerelease: false
-          files: release-output/Al-Shahin-Quran-debug.apk
+          make_latest: true
+          files: |
+            release-output/Al-Shahin-Quran-release.apk
+            release-output/Al-Shahin-Quran-release.aab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
