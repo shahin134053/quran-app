@@ -1,0 +1,8 @@
+{
+  "name": "Al-Shahin Quran",
+  "description": "A premium, modern Islamic Quran app featuring multilingual support, audio recitation, and a clean reading experience.",
+  "requestFramePermissions": [
+    "microphone",
+    "geolocation"
+  ]
+}
