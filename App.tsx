@@ -11,11 +11,13 @@ import {
   ChevronRight, Search, Bookmark as BookmarkIcon, 
   Settings as SettingsIcon, Play, BookOpen, 
   ArrowLeft, Plus, Minus, Moon, Sun, BookmarkCheck,
-  Globe, LayoutGrid, Sliders, X, Clock, MapPin, Calendar, Headphones, Quote, RefreshCw, Info, ChevronDown, ChevronUp, User, Download, HardDrive, Trash2, CheckCircle2, Heart, Code, Mail, Copy, Activity, Brain
+  Globe, LayoutGrid, Sliders, X, Clock, MapPin, Calendar, Headphones, Quote, RefreshCw, Info, ChevronDown, ChevronUp, User, Download, HardDrive, Trash2, CheckCircle2, Heart, Code, Mail, Copy, Activity, Brain, ArrowUpCircle, Sparkles
 } from 'lucide-react';
 import AudioPlayer from './components/AudioPlayer';
 import TasbihView from './components/TasbihView';
 import IslamicGames from './components/IslamicGames';
+import UpdateModal from './components/UpdateModal';
+import { checkForAppUpdate, UpdateInfo, CURRENT_APP_VERSION } from './services/updateService';
 
 const LiveClock: React.FC = () => {
   const [time, setTime] = useState(new Date());
@@ -232,6 +234,12 @@ const AppContent: React.FC = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
   const [downloadingSurah, setDownloadingSurah] = useState<number | null>(null);
   
+  // App In-App Update States
+  const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
+  const [updateStatusText, setUpdateStatusText] = useState<string | null>(null);
+
   // Hadith browsing states
   const [selectedHadithBook, setSelectedHadithBook] = useState<HadithBook | null>(null);
   const [hadithList, setHadithList] = useState<HadithData[]>([]);
@@ -296,7 +304,34 @@ const AppContent: React.FC = () => {
       }
     };
     loadData();
+
+    // Check for app updates in background
+    checkForAppUpdate().then((info) => {
+      if (info && info.hasUpdate) {
+        setUpdateInfo(info);
+        setIsUpdateModalOpen(true);
+      }
+    });
   }, []);
+
+  const handleManualUpdateCheck = async () => {
+    setIsCheckingUpdate(true);
+    setUpdateStatusText(null);
+    try {
+      const info = await checkForAppUpdate(true);
+      if (info && info.hasUpdate) {
+        setUpdateInfo(info);
+        setIsUpdateModalOpen(true);
+        setUpdateStatusText(language === 'bn' ? 'নতুন আপডেট পাওয়া গেছে!' : 'New update available!');
+      } else {
+        setUpdateStatusText(language === 'bn' ? `আপনার অ্যাপটি সম্পূর্ণ আপ-টু-ডেট আছে (v${CURRENT_APP_VERSION})` : `Your app is completely up to date (v${CURRENT_APP_VERSION})`);
+      }
+    } catch {
+      setUpdateStatusText(language === 'bn' ? 'আপডেট চেক করতে সমস্যা হয়েছে, ইন্টারনেট সংযোগ চেক করুন।' : 'Failed to check updates, please check internet connection.');
+    } finally {
+      setIsCheckingUpdate(false);
+    }
+  };
 
   useEffect(() => {
     const handler = setTimeout(() => setSearchQuery(inputValue), 300);
@@ -1097,6 +1132,61 @@ const AppContent: React.FC = () => {
           </div>
         </section>
 
+        {/* App Updates Section */}
+        <section className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 shadow-sm border border-slate-100 dark:border-slate-700">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600">
+                <ArrowUpCircle size={20} />
+              </div>
+              <div>
+                <h3 className="font-black text-xs uppercase tracking-[0.2em] text-slate-400">
+                  {language === 'bn' ? 'অ্যাপ আপডেট' : 'App Updates'}
+                </h3>
+                <p className="text-xs font-bold text-slate-700 dark:text-slate-200">
+                  {language === 'bn' ? 'বর্তমান সংস্করণ:' : 'Current Version:'} v{CURRENT_APP_VERSION}
+                </p>
+              </div>
+            </div>
+            <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-[10px] font-black rounded-full uppercase tracking-wider">
+              {language === 'bn' ? 'অফিসিয়াল' : 'Official'}
+            </span>
+          </div>
+
+          <button
+            onClick={handleManualUpdateCheck}
+            disabled={isCheckingUpdate}
+            className="w-full flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-900 rounded-[1.5rem] group active:scale-[0.98] transition-all hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/40 rounded-xl flex items-center justify-center text-emerald-600">
+                <RefreshCw size={18} className={isCheckingUpdate ? 'animate-spin' : ''} />
+              </div>
+              <div className="text-left">
+                <h4 className="font-black text-sm text-slate-800 dark:text-slate-100">
+                  {isCheckingUpdate 
+                    ? (language === 'bn' ? 'আপডেট চেক করা হচ্ছে...' : 'Checking...') 
+                    : (language === 'bn' ? 'আপডেট পরীক্ষা করুন' : 'Check for Updates')}
+                </h4>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  {language === 'bn' ? 'নতুন সংস্করণ পরীক্ষা করতে ট্যাপ করুন' : 'Tap to check latest release'}
+                </p>
+              </div>
+            </div>
+            <div className="p-2 bg-white dark:bg-slate-800 rounded-full text-slate-400 group-hover:text-emerald-500 transition-colors">
+              <ChevronRight size={18} />
+            </div>
+          </button>
+
+          {updateStatusText && (
+            <div className="mt-4 p-4 bg-emerald-50/60 dark:bg-emerald-950/20 rounded-2xl border border-emerald-100 dark:border-emerald-900/30 text-center animate-fade-in">
+              <p className="text-xs font-bold text-emerald-700 dark:text-emerald-300 font-bangla">
+                {updateStatusText}
+              </p>
+            </div>
+          )}
+        </section>
+
         {/* About & Support Links */}
         <section className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 shadow-sm border border-slate-100 dark:border-slate-700">
            <div className="flex items-center gap-3 mb-6">
@@ -1190,7 +1280,7 @@ const AppContent: React.FC = () => {
       </div>
       
       <div className="text-center">
-        <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.3em] opacity-50">Version 1.0.0</p>
+        <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.3em] opacity-50">Version {CURRENT_APP_VERSION}</p>
       </div>
     </motion.div>
   );
@@ -1329,6 +1419,11 @@ const AppContent: React.FC = () => {
       </AnimatePresence>
       {playingAudio && <AudioPlayer url={playingAudio.url} title={playingAudio.title} onClose={() => setPlayingAudio(null)} />}
       {renderPreviewModal()}
+      <UpdateModal 
+        updateInfo={updateInfo} 
+        isOpen={isUpdateModalOpen} 
+        onClose={() => setIsUpdateModalOpen(false)} 
+      />
     </Layout>
   );
 };
