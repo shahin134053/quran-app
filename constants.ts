@@ -91,7 +91,11 @@ export const UI_TRANSLATIONS = {
     tryAgain: 'Try Again',
     correctOrder: 'Correct Order!',
     wrongOrder: 'Incorrect Order',
-    completed: 'Completed'
+    completed: 'Completed',
+    islamicThemeTitle: 'Islamic UI Themes',
+    changeTheme: 'Change Theme',
+    activeTheme: 'Active Theme',
+    fiveThemesDesc: '5 Dedicated Islamic Interfaces'
   },
   bn: {
     home: 'হোম',
@@ -184,7 +188,11 @@ export const UI_TRANSLATIONS = {
     tryAgain: 'আবার চেষ্টা করুন',
     correctOrder: 'সঠিক ক্রম!',
     wrongOrder: 'ভুল ক্রম',
-    completed: 'সম্পন্ন'
+    completed: 'সম্পন্ন',
+    islamicThemeTitle: 'ইসলামিক ইউআই থিম',
+    changeTheme: 'থিম পরিবর্তন',
+    activeTheme: 'বর্তমান ইউআই',
+    fiveThemesDesc: '৫টি ডেডিকেটেড ইসলামিক ইন্টারফেস'
   },
   hi: {
     home: 'होम',
@@ -277,7 +285,11 @@ export const UI_TRANSLATIONS = {
     tryAgain: 'पुनः प्रयास करें',
     correctOrder: 'सही क्रम!',
     wrongOrder: 'गलत क्रम',
-    completed: 'पूरा हुआ'
+    completed: 'पूरा हुआ',
+    islamicThemeTitle: 'इस्लामी यूआई थीम',
+    changeTheme: 'थीम बदलें',
+    activeTheme: 'सक्रिय यूआई',
+    fiveThemesDesc: '5 समर्पित इस्लामी इंटरफेस'
   },
   ar: {
     home: 'الرئيسية',
@@ -370,7 +382,11 @@ export const UI_TRANSLATIONS = {
     tryAgain: 'حاول مرة أخرى',
     correctOrder: 'ترتيب صحيح!',
     wrongOrder: 'ترتيب خاطئ',
-    completed: 'مكتمل'
+    completed: 'مكتمل',
+    islamicThemeTitle: 'سمات واجهة المستخدم الإسلامية',
+    changeTheme: 'تغيير السمة',
+    activeTheme: 'السمة الحالية',
+    fiveThemesDesc: '٥ واجهات إسلامية مميزة'
   }
 };
 

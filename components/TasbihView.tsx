@@ -9,7 +9,7 @@ interface TasbihViewProps {
 }
 
 const TasbihView: React.FC<TasbihViewProps> = ({ setActiveTab }) => {
-  const { language } = useApp();
+  const { language, activeThemeConfig } = useApp();
   const t = UI_TRANSLATIONS[language];
   
   const [count, setCount] = useState(0);
@@ -47,10 +47,18 @@ const TasbihView: React.FC<TasbihViewProps> = ({ setActiveTab }) => {
 
       <div className="flex flex-col items-center justify-center space-y-8">
         <div className="relative w-64 h-64 flex items-center justify-center">
-          <div className="absolute inset-0 bg-emerald-50 dark:bg-emerald-900/20 rounded-full animate-pulse" />
-          <div className="absolute inset-4 bg-white dark:bg-slate-800 rounded-full shadow-xl border-4 border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center">
+          <div 
+            className="absolute inset-0 rounded-full animate-pulse opacity-15"
+            style={{ backgroundColor: activeThemeConfig.primaryColor }}
+          />
+          <div className="absolute inset-4 bg-white dark:bg-slate-800 rounded-full shadow-2xl border-4 border-slate-100 dark:border-slate-700/50 flex items-center justify-center">
             <div className="text-center">
-              <span className="text-6xl font-black text-emerald-600 dark:text-emerald-400 tabular-nums">{count}</span>
+              <span 
+                className="text-6xl font-black tabular-nums transition-colors duration-300"
+                style={{ color: activeThemeConfig.primaryColor }}
+              >
+                {count}
+              </span>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">{t.count}</p>
             </div>
           </div>
@@ -69,11 +77,11 @@ const TasbihView: React.FC<TasbihViewProps> = ({ setActiveTab }) => {
               cy="128"
               r="120"
               fill="none"
-              stroke="currentColor"
+              stroke={activeThemeConfig.primaryColor}
               strokeWidth="8"
               strokeDasharray={2 * Math.PI * 120}
               strokeDashoffset={2 * Math.PI * 120 * (1 - (count % target) / target)}
-              className="text-emerald-500 transition-all duration-300"
+              className="transition-all duration-300"
               strokeLinecap="round"
             />
           </svg>
@@ -81,7 +89,11 @@ const TasbihView: React.FC<TasbihViewProps> = ({ setActiveTab }) => {
 
         <button 
           onClick={handleCount}
-          className="w-24 h-24 bg-emerald-600 rounded-full shadow-xl shadow-emerald-600/30 flex items-center justify-center active:scale-90 transition-all duration-100 touch-manipulation"
+          className="w-24 h-24 rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-all duration-100 touch-manipulation hover:scale-105"
+          style={{ 
+            backgroundColor: activeThemeConfig.primaryColor,
+            boxShadow: `0 15px 35px -5px ${activeThemeConfig.primaryColor}50`
+          }}
         >
           <Plus size={40} className="text-white" />
         </button>
@@ -94,18 +106,19 @@ const TasbihView: React.FC<TasbihViewProps> = ({ setActiveTab }) => {
             <RefreshCw size={16} /> {t.reset}
           </button>
           <div className="flex-1 flex items-center justify-between bg-slate-100 dark:bg-slate-800 rounded-2xl px-4 py-2">
-            <button onClick={() => setTarget(Math.max(1, target - 1))} className="p-2 text-slate-400 hover:text-emerald-500"><Minus size={16} /></button>
+            <button onClick={() => setTarget(Math.max(1, target - 1))} className="p-2 text-slate-400 hover:text-amber-500"><Minus size={16} /></button>
             <div className="text-center">
               <span className="block text-lg font-black text-slate-800 dark:text-slate-100">{target}</span>
               <span className="text-[8px] font-bold uppercase text-slate-400 tracking-widest">{t.target}</span>
             </div>
-            <button onClick={() => setTarget(target + 1)} className="p-2 text-slate-400 hover:text-emerald-500"><Plus size={16} /></button>
+            <button onClick={() => setTarget(target + 1)} className="p-2 text-slate-400 hover:text-amber-500"><Plus size={16} /></button>
           </div>
         </div>
         
         <button 
           onClick={() => setVibration(!vibration)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-colors ${vibration ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-colors ${vibration ? 'text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}
+          style={vibration ? { backgroundColor: activeThemeConfig.primaryColor } : {}}
         >
           <Activity size={14} /> {t.vibration}
         </button>
@@ -115,3 +128,4 @@ const TasbihView: React.FC<TasbihViewProps> = ({ setActiveTab }) => {
 };
 
 export default TasbihView;
+

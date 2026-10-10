@@ -11,17 +11,19 @@ import {
   ChevronRight, Search, Bookmark as BookmarkIcon, 
   Settings as SettingsIcon, Play, BookOpen, 
   ArrowLeft, Plus, Minus, Moon, Sun, BookmarkCheck,
-  Globe, LayoutGrid, Sliders, X, Clock, MapPin, Calendar, Headphones, Quote, RefreshCw, Info, ChevronDown, ChevronUp, User, Download, HardDrive, Trash2, CheckCircle2, Heart, Code, Mail, Copy, Activity, Brain, ArrowUpCircle, Sparkles
+  Globe, LayoutGrid, Sliders, X, Clock, MapPin, Calendar, Headphones, Quote, RefreshCw, Info, ChevronDown, ChevronUp, User, Download, HardDrive, Trash2, CheckCircle2, Heart, Code, Mail, Copy, Activity, Brain, ArrowUpCircle, Sparkles, Palette
 } from 'lucide-react';
 import AudioPlayer from './components/AudioPlayer';
 import TasbihView from './components/TasbihView';
 import IslamicGames from './components/IslamicGames';
 import UpdateModal from './components/UpdateModal';
+import ThemeSelectorModal from './components/ThemeSelectorModal';
+import { THEME_LIST, ISLAMIC_THEMES } from './themes';
 import { checkForAppUpdate, UpdateInfo, CURRENT_APP_VERSION } from './services/updateService';
 
 const LiveClock: React.FC = () => {
   const [time, setTime] = useState(new Date());
-  const { language } = useApp();
+  const { language, activeThemeConfig } = useApp();
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -44,7 +46,10 @@ const LiveClock: React.FC = () => {
 
   return (
     <div className="text-right flex flex-col items-end">
-      <div className="text-2xl font-black text-emerald-700 dark:text-emerald-400 tracking-tighter tabular-nums leading-none">
+      <div 
+        className="text-2xl font-black tracking-tighter tabular-nums leading-none transition-colors duration-300"
+        style={{ color: activeThemeConfig.primaryColor }}
+      >
         {timeString}
       </div>
       <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mt-1.5 bg-slate-100 dark:bg-slate-800/50 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
@@ -239,6 +244,7 @@ const AppContent: React.FC = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
   const [updateStatusText, setUpdateStatusText] = useState<string | null>(null);
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
 
   // Hadith browsing states
   const [selectedHadithBook, setSelectedHadithBook] = useState<HadithBook | null>(null);
@@ -249,6 +255,8 @@ const AppContent: React.FC = () => {
   const { 
     language, setLanguage, 
     theme, setTheme,
+    islamicTheme, setIslamicTheme,
+    activeThemeConfig,
     arabicFontSize, setArabicFontSize,
     translationFontSize, setTranslationFontSize,
     bookmarks, addBookmark, removeBookmark,
@@ -439,18 +447,108 @@ const AppContent: React.FC = () => {
       <header className="flex justify-between items-start px-1">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-emerald-600 dark:text-emerald-400 font-black text-xs uppercase tracking-[0.2em] bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-lg">Assalamu Alaikum</span>
+            <span 
+              className="font-black text-xs uppercase tracking-[0.2em] px-2.5 py-1 rounded-lg transition-colors"
+              style={{ backgroundColor: `${activeThemeConfig.primaryColor}20`, color: activeThemeConfig.primaryColor }}
+            >
+              Assalamu Alaikum
+            </span>
           </div>
           <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight leading-tight mt-2">
             {userName}
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 mt-2">
-             <MapPin size={12} className="text-emerald-500" />
+             <MapPin size={12} style={{ color: activeThemeConfig.primaryColor }} />
              <span className="text-[10px] font-bold uppercase tracking-wider">{locationName || t.currentLocation}</span>
           </div>
         </div>
         <LiveClock />
       </header>
+
+      {/* Islamic UI Theme Switcher Card & 5-Theme Instant Selector */}
+      <div className="relative overflow-hidden rounded-[2.5rem] p-1 bg-white dark:bg-slate-800 shadow-xl shadow-slate-900/5 dark:shadow-black/40 border border-slate-100 dark:border-slate-700/60 transition-all duration-300">
+        <div className="relative p-5 sm:p-6 rounded-[2.2rem] bg-gradient-to-br from-slate-50 via-white to-amber-50/20 dark:from-slate-900 dark:via-slate-900/80 dark:to-amber-950/20 overflow-hidden">
+          {/* Subtle decorative motif */}
+          <div className="absolute top-0 right-0 p-5 opacity-5 dark:opacity-10 pointer-events-none">
+            <Sparkles size={80} className="text-amber-500" />
+          </div>
+
+          <div className="flex items-center justify-between gap-3 mb-4 relative z-10">
+            <div className="flex items-center gap-3">
+              <div 
+                className="w-11 h-11 rounded-2xl flex items-center justify-center text-white shadow-md transition-transform duration-300"
+                style={{ backgroundColor: activeThemeConfig.primaryColor }}
+              >
+                <Palette size={20} />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span 
+                    className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border"
+                    style={{ 
+                      backgroundColor: `${activeThemeConfig.primaryColor}15`, 
+                      color: activeThemeConfig.primaryColor,
+                      borderColor: `${activeThemeConfig.primaryColor}30` 
+                    }}
+                  >
+                    {t.islamicThemeTitle}
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-400">৫টি প্রিমিয়াম থিম</span>
+                </div>
+                <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight mt-0.5 flex items-center gap-2">
+                  <span>{activeThemeConfig.nameBn}</span>
+                  <span className="font-arabic text-sm text-amber-600 dark:text-amber-400 font-bold">{activeThemeConfig.nameAr}</span>
+                </h3>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setIsThemeModalOpen(true)}
+              className="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider text-white shadow-md active:scale-95 transition-all flex items-center gap-1.5 shrink-0"
+              style={{ backgroundColor: activeThemeConfig.primaryColor }}
+            >
+              <Sparkles size={14} />
+              <span>{t.changeTheme}</span>
+            </button>
+          </div>
+
+          {/* 5-Theme Quick-Switch Buttons */}
+          <div className="relative z-10 grid grid-cols-5 gap-1.5 sm:gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+            {THEME_LIST.map((th, idx) => {
+              const isCurr = islamicTheme === th.id;
+              return (
+                <button
+                  key={th.id}
+                  onClick={() => setIslamicTheme(th.id)}
+                  title={`${th.nameBn} (${th.nameEn})`}
+                  className={`flex flex-col items-center justify-center p-2 rounded-2xl transition-all duration-300 relative group ${
+                    isCurr
+                      ? 'bg-white dark:bg-slate-800 shadow-md ring-2 ring-offset-2 dark:ring-offset-slate-900 scale-[1.03]'
+                      : 'bg-slate-100/70 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 opacity-70 hover:opacity-100'
+                  }`}
+                  style={{
+                    ...(isCurr ? { ringColor: th.primaryColor } : {})
+                  }}
+                >
+                  <span
+                    className="w-4 h-4 rounded-full mb-1 shadow-sm transition-transform group-hover:scale-125"
+                    style={{ backgroundColor: th.primaryColor }}
+                  />
+                  <span className="text-[9px] font-black tracking-tighter truncate w-full text-center text-slate-700 dark:text-slate-300">
+                    {idx + 1}. {th.nameBn.split('-')[0].split(' ')[0]}
+                  </span>
+                  {isCurr && (
+                    <span 
+                      className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ring-2 ring-white dark:ring-slate-900"
+                      style={{ backgroundColor: th.primaryColor }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
 
       {ramadanDays !== null && ramadanDays > 0 && (
         <div className="bg-white dark:bg-slate-800 p-1 rounded-[2.5rem] shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border border-white/20 dark:border-slate-700/30 relative overflow-hidden group">
@@ -687,30 +785,43 @@ const AppContent: React.FC = () => {
         <div>
           <h2 className="text-3xl font-black tracking-tight">{t.prayerTimes}</h2>
           <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 mt-1">
-             <MapPin size={12} className="text-emerald-500" />
+             <MapPin size={12} style={{ color: activeThemeConfig.primaryColor }} />
              <span className="text-[10px] font-bold uppercase tracking-wider">{locationName || t.currentLocation}</span>
           </div>
         </div>
-        <div className="p-4 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 rounded-2xl"><Clock size={28} /></div>
+        <div 
+          className="p-4 rounded-2xl shadow-sm"
+          style={{ backgroundColor: `${activeThemeConfig.primaryColor}15`, color: activeThemeConfig.primaryColor }}
+        >
+          <Clock size={28} />
+        </div>
       </div>
 
       {prayerData ? (
         <div className="space-y-4">
-          <div className="bg-white dark:bg-slate-800 p-1 rounded-[2.5rem] shadow-xl shadow-emerald-900/10 dark:shadow-emerald-900/20 border border-white/20 dark:border-slate-700/30 relative overflow-hidden">
-             <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30 p-8 rounded-[2.2rem] relative overflow-hidden">
+          <div className="bg-white dark:bg-slate-800 p-1 rounded-[2.5rem] shadow-xl shadow-slate-900/5 dark:shadow-black/30 border border-white/20 dark:border-slate-700/30 relative overflow-hidden">
+             <div className="bg-gradient-to-br from-slate-50 via-white to-amber-50/20 dark:from-slate-900 dark:via-slate-900/80 dark:to-amber-950/20 p-8 rounded-[2.2rem] relative overflow-hidden">
                <div className="relative z-10">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mb-2">{prayerData.hijri.month.en}</p>
+                  <p 
+                    className="text-[10px] font-black uppercase tracking-[0.2em] mb-2"
+                    style={{ color: activeThemeConfig.primaryColor }}
+                  >
+                    {prayerData.hijri.month.en}
+                  </p>
                   <h3 className="text-4xl font-black mb-1 text-slate-800 dark:text-slate-100">{prayerData.hijri.day} {prayerData.hijri.month.ar} {prayerData.hijri.year}</h3>
                   <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">{prayerData.hijri.date}</p>
                   
                   {ramadanDays !== null && ramadanDays > 0 && (
                     <div className="mt-6 inline-flex items-center gap-2 bg-white/60 dark:bg-slate-800/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 dark:border-slate-700/30 shadow-sm">
-                      <Moon size={16} className="text-emerald-600 dark:text-emerald-400" />
+                      <Moon size={16} style={{ color: activeThemeConfig.primaryColor }} />
                       <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{ramadanDays} {t.daysLeft} to Ramadan</span>
                     </div>
                   )}
                </div>
-               <Calendar className="absolute top-1/2 -right-4 -translate-y-1/2 text-emerald-500/10 dark:text-emerald-400/5 w-40 h-40 pointer-events-none" />
+               <Calendar 
+                 className="absolute top-1/2 -right-4 -translate-y-1/2 w-40 h-40 pointer-events-none opacity-5 dark:opacity-10" 
+                 style={{ color: activeThemeConfig.primaryColor }}
+               />
              </div>
           </div>
 
@@ -728,16 +839,31 @@ const AppContent: React.FC = () => {
                   className="p-6 flex justify-between items-center cursor-pointer active:bg-slate-50 dark:active:bg-slate-700/50"
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${expandedPrayer === p.key ? 'bg-emerald-600 text-white' : 'bg-slate-50 dark:bg-slate-900 text-emerald-600'}`}>
+                    <div 
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center transition-colors shadow-sm"
+                      style={expandedPrayer === p.key ? { backgroundColor: activeThemeConfig.primaryColor, color: '#ffffff' } : { backgroundColor: `${activeThemeConfig.primaryColor}15`, color: activeThemeConfig.primaryColor }}
+                    >
                       <p.icon size={22} />
                     </div>
                     <div>
                       <span className="font-black tracking-tight text-slate-800 dark:text-slate-100 block">{p.label}</span>
-                      {expandedPrayer === p.key && <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">Tap to collapse</span>}
+                      {expandedPrayer === p.key && (
+                        <span 
+                          className="text-[10px] font-bold uppercase tracking-wider"
+                          style={{ color: activeThemeConfig.primaryColor }}
+                        >
+                          Tap to collapse
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-xl font-black text-emerald-700 dark:text-emerald-400">{p.time}</span>
+                    <span 
+                      className="text-xl font-black"
+                      style={{ color: activeThemeConfig.primaryColor }}
+                    >
+                      {p.time}
+                    </span>
                     <ChevronDown size={16} className={`text-slate-400 transition-transform duration-300 ${expandedPrayer === p.key ? 'rotate-180' : ''}`} />
                   </div>
                 </div>
@@ -1040,14 +1166,18 @@ const AppContent: React.FC = () => {
           </div>
         </header>
         <div className="px-4 py-8 max-w-2xl mx-auto w-full space-y-8 pb-40">
-          <div className="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-[3rem] p-10 text-center shadow-2xl shadow-emerald-900/30 relative overflow-hidden">
+          <div className={`bg-gradient-to-br ${activeThemeConfig.gradientHero} rounded-[3rem] p-10 text-center shadow-2xl relative overflow-hidden transition-all duration-500`}>
              <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
                 <svg viewBox="0 0 100 100" className="w-full h-full"><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5"/></pattern><rect width="100" height="100" fill="url(#grid)" /></svg>
              </div>
              <p className="font-arabic text-4xl text-white mb-6 drop-shadow-md">{UI_TRANSLATIONS.ar.bismillah}</p>
-             {language !== 'ar' && <p className="text-emerald-50 text-xs font-bold italic opacity-90 max-w-[85%] mx-auto leading-relaxed">"{t.bismillah}"</p>}
+             {language !== 'ar' && <p className="text-white/90 text-xs font-bold italic opacity-95 max-w-[85%] mx-auto leading-relaxed">"{t.bismillah}"</p>}
              {selectedSurah.ayahs[0]?.audio && (
-                <button onClick={() => setPlayingAudio({url: selectedSurah.ayahs[0].audio!, title: `${selectedSurah.englishName} : 1`})} className="mt-8 bg-white text-emerald-700 px-8 py-3 rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 flex items-center gap-3 mx-auto transition-all hover:shadow-2xl hover:bg-emerald-50">
+                <button 
+                  onClick={() => setPlayingAudio({url: selectedSurah.ayahs[0].audio!, title: `${selectedSurah.englishName} : 1`})} 
+                  className="mt-8 bg-white px-8 py-3 rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 flex items-center gap-3 mx-auto transition-all hover:shadow-2xl hover:scale-105"
+                  style={{ color: activeThemeConfig.primaryColor }}
+                >
                   <Play size={18} fill="currentColor" />
                   {t.playRecitation}
                 </button>
@@ -1102,6 +1232,99 @@ const AppContent: React.FC = () => {
 
         {/* Offline Manager Section */}
         <OfflineManager />
+
+        {/* Islamic UI Theme Switcher Showcase Gallery */}
+        <section className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-slate-100 dark:border-slate-700">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div 
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-sm"
+                style={{ backgroundColor: activeThemeConfig.primaryColor }}
+              >
+                <Palette size={20} />
+              </div>
+              <div>
+                <h3 className="font-black text-xs uppercase tracking-[0.2em] text-slate-400">
+                  {t.islamicThemeTitle}
+                </h3>
+                <p className="text-xs font-bold text-slate-700 dark:text-slate-200">
+                  {language === 'bn' ? '৫টি প্রিমিয়াম ইসলামিক ইন্টারফেস' : '5 Dedicated Islamic Interfaces'}
+                </p>
+              </div>
+            </div>
+            
+            <button
+              onClick={() => setIsThemeModalOpen(true)}
+              className="text-xs font-black uppercase tracking-wider px-3.5 py-1.5 rounded-xl border border-amber-500/40 text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 active:scale-95 transition-all flex items-center gap-1.5"
+            >
+              <Sparkles size={13} />
+              <span>{language === 'bn' ? 'সব থিম' : 'View All'}</span>
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {THEME_LIST.map((th, index) => {
+              const isSelected = islamicTheme === th.id;
+              return (
+                <div
+                  key={th.id}
+                  onClick={() => setIslamicTheme(th.id)}
+                  className={`p-4 sm:p-5 rounded-3xl border-2 cursor-pointer transition-all ${
+                    isSelected
+                      ? 'border-amber-500 bg-gradient-to-r from-amber-500/10 via-transparent to-amber-500/5 shadow-md shadow-amber-500/10'
+                      : 'border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40 hover:border-slate-200 dark:hover:border-slate-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3.5">
+                      <div
+                        className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-black text-sm shadow-md shrink-0"
+                        style={{ backgroundColor: th.primaryColor }}
+                      >
+                        {index + 1}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-black text-sm sm:text-base text-slate-900 dark:text-white tracking-tight">
+                            {th.nameBn}
+                          </h4>
+                          <span className="font-arabic text-xs font-bold text-amber-600 dark:text-amber-400">
+                            {th.nameAr}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                          {th.taglineBn}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 shrink-0">
+                      <div className="hidden sm:flex items-center gap-1">
+                        {th.previewColors.map((c, ci) => (
+                          <span
+                            key={ci}
+                            className="w-3.5 h-3.5 rounded-full border border-black/10 dark:border-white/10"
+                            style={{ backgroundColor: c }}
+                          />
+                        ))}
+                      </div>
+
+                      <div
+                        className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 ${
+                          isSelected
+                            ? 'bg-amber-500 text-white shadow-sm'
+                            : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
+                        }`}
+                      >
+                        {isSelected ? (language === 'bn' ? 'সক্রিয়' : 'Active') : (language === 'bn' ? 'বাছাই' : 'Select')}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
         <section className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 shadow-sm border border-slate-100 dark:border-slate-700">
           <div className="flex items-center gap-3 mb-6"><LayoutGrid className="text-emerald-600" size={20} /><h3 className="font-black text-xs uppercase tracking-[0.2em] text-slate-400">{t.appearance}</h3></div>
@@ -1424,6 +1647,10 @@ const AppContent: React.FC = () => {
         isOpen={isUpdateModalOpen} 
         onClose={() => setIsUpdateModalOpen(false)} 
       />
+      <ThemeSelectorModal 
+        isOpen={isThemeModalOpen} 
+        onClose={() => setIsThemeModalOpen(false)} 
+      />
     </Layout>
   );
 };
@@ -1436,7 +1663,7 @@ interface AyahItemProps {
 
 const AyahItem: React.FC<AyahItemProps> = ({ ayah, surah, onPlayAudio }) => {
   const [isTafsirExpanded, setIsTafsirExpanded] = useState(false);
-  const { language, arabicFontSize, translationFontSize, bookmarks, addBookmark, removeBookmark } = useApp();
+  const { language, arabicFontSize, translationFontSize, bookmarks, addBookmark, removeBookmark, activeThemeConfig } = useApp();
   const t = UI_TRANSLATIONS[language];
 
   const isBookmarked = bookmarks.some(b => b.surahNumber === surah.number && b.ayahNumber === ayah.numberInSurah);
@@ -1444,15 +1671,32 @@ const AyahItem: React.FC<AyahItemProps> = ({ ayah, surah, onPlayAudio }) => {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 shadow-sm border border-slate-100 dark:border-slate-700/50 hover:shadow-md transition-all">
       <div className="flex justify-between items-center mb-8">
-        <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 rounded-2xl flex items-center justify-center text-sm font-black border border-slate-100 dark:border-slate-800">{ayah.numberInSurah}</div>
+        <div 
+          className="w-12 h-12 rounded-2xl flex items-center justify-center text-sm font-black border border-slate-100 dark:border-slate-800 shadow-sm"
+          style={{ backgroundColor: `${activeThemeConfig.primaryColor}15`, color: activeThemeConfig.primaryColor }}
+        >
+          {ayah.numberInSurah}
+        </div>
         <div className="flex gap-3">
           <button onClick={() => ayah.tafsir && setIsTafsirExpanded(!isTafsirExpanded)} className={`p-4 rounded-2xl active:scale-90 transition-transform flex items-center gap-2 font-black text-[10px] uppercase tracking-wider px-5 ${isTafsirExpanded ? 'bg-orange-600 text-white' : 'bg-orange-50 dark:bg-orange-900/30 text-orange-600'}`}>
             <Info size={16} />
             {t.tafsir}
             {isTafsirExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
-          <button onClick={() => ayah.audio && onPlayAudio(ayah.audio, `${surah.englishName} : ${ayah.numberInSurah}`)} className="p-4 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 rounded-2xl active:scale-90 transition-transform"><Play size={20} fill="currentColor" /></button>
-          <button onClick={() => isBookmarked ? removeBookmark(surah.number, ayah.numberInSurah) : addBookmark({surahNumber: surah.number, ayahNumber: ayah.numberInSurah, surahName: surah.englishName, timestamp: Date.now()})} className={`p-4 rounded-2xl transition-all active:scale-90 ${isBookmarked ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600' : 'bg-slate-50 dark:bg-slate-700 text-slate-400'}`}>{isBookmarked ? <BookmarkCheck size={20} /> : <BookmarkIcon size={20} />}</button>
+          <button 
+            onClick={() => ayah.audio && onPlayAudio(ayah.audio, `${surah.englishName} : ${ayah.numberInSurah}`)} 
+            className="p-4 rounded-2xl active:scale-90 transition-transform shadow-sm"
+            style={{ backgroundColor: `${activeThemeConfig.primaryColor}15`, color: activeThemeConfig.primaryColor }}
+          >
+            <Play size={20} fill="currentColor" />
+          </button>
+          <button 
+            onClick={() => isBookmarked ? removeBookmark(surah.number, ayah.numberInSurah) : addBookmark({surahNumber: surah.number, ayahNumber: ayah.numberInSurah, surahName: surah.englishName, timestamp: Date.now()})} 
+            className="p-4 rounded-2xl transition-all active:scale-90"
+            style={isBookmarked ? { backgroundColor: `${activeThemeConfig.primaryColor}20`, color: activeThemeConfig.primaryColor } : { backgroundColor: 'rgba(148, 163, 184, 0.1)', color: '#94a3b8' }}
+          >
+            {isBookmarked ? <BookmarkCheck size={20} /> : <BookmarkIcon size={20} />}
+          </button>
         </div>
       </div>
       
@@ -1492,35 +1736,42 @@ interface SurahCardProps {
   onPlayAudio: (e: React.MouseEvent) => void;
 }
 
-const SurahCard: React.FC<SurahCardProps> = ({ surah, onClick, onPlayAudio }) => (
-  <div onClick={onClick} className="bg-white dark:bg-slate-800 p-1 rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group border border-slate-100 dark:border-slate-700/50">
-    <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-[1.8rem] flex items-center justify-between group-hover:bg-white dark:group-hover:bg-slate-800 transition-colors">
-      <div className="flex items-center gap-5">
-        <div className="relative w-12 h-12 flex items-center justify-center group-hover:scale-105 transition-transform">
-          <div className="absolute inset-0 w-full h-full bg-emerald-100 dark:bg-emerald-900/30 rounded-xl rotate-45 group-hover:rotate-90 transition-all duration-700" />
-          <span className="relative z-10 text-sm font-black text-emerald-600 dark:text-emerald-400">{surah.number}</span>
-        </div>
-        <div>
-          <div className="flex items-center gap-3">
-            <h4 className="font-black text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 transition-colors tracking-tight text-lg leading-tight">{surah.englishName}</h4>
-            <button 
-              onClick={onPlayAudio}
-              className="p-1.5 bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-lg opacity-0 group-hover:opacity-100 transition-all active:scale-90"
-              title="Play full recitation"
-            >
-              <Play size={14} fill="currentColor" />
-            </button>
+const SurahCard: React.FC<SurahCardProps> = ({ surah, onClick, onPlayAudio }) => {
+  const { activeThemeConfig } = useApp();
+  return (
+    <div onClick={onClick} className="bg-white dark:bg-slate-800 p-1 rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group border border-slate-100 dark:border-slate-700/50">
+      <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-[1.8rem] flex items-center justify-between group-hover:bg-white dark:group-hover:bg-slate-800 transition-colors">
+        <div className="flex items-center gap-5">
+          <div className="relative w-12 h-12 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div 
+              className="absolute inset-0 w-full h-full rounded-xl rotate-45 group-hover:rotate-90 transition-all duration-700 opacity-25"
+              style={{ backgroundColor: activeThemeConfig.primaryColor }}
+            />
+            <span className="relative z-10 text-sm font-black" style={{ color: activeThemeConfig.primaryColor }}>{surah.number}</span>
           </div>
-          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 leading-none">{surah.revelationType} • {surah.numberOfAyahs} Ayahs</p>
+          <div>
+            <div className="flex items-center gap-3">
+              <h4 className="font-black text-slate-800 dark:text-slate-100 transition-colors tracking-tight text-lg leading-tight group-hover:text-amber-500">{surah.englishName}</h4>
+              <button 
+                onClick={onPlayAudio}
+                className="p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all active:scale-90 shadow-sm"
+                style={{ backgroundColor: `${activeThemeConfig.primaryColor}20`, color: activeThemeConfig.primaryColor }}
+                title="Play full recitation"
+              >
+                <Play size={14} fill="currentColor" />
+              </button>
+            </div>
+            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 leading-none">{surah.revelationType} • {surah.numberOfAyahs} Ayahs</p>
+          </div>
         </div>
-      </div>
-      <div className="text-right">
-        <p className="font-arabic text-2xl text-emerald-800 dark:text-emerald-400 font-bold leading-none opacity-80 group-hover:opacity-100 transition-opacity">{surah.name}</p>
-        <p className="text-[9px] text-slate-400 font-black uppercase tracking-tighter mt-1">{surah.englishNameTranslation}</p>
+        <div className="text-right">
+          <p className="font-arabic text-2xl font-bold leading-none opacity-85 group-hover:opacity-100 transition-opacity" style={{ color: activeThemeConfig.primaryColor }}>{surah.name}</p>
+          <p className="text-[9px] text-slate-400 font-black uppercase tracking-tighter mt-1">{surah.englishNameTranslation}</p>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const App: React.FC = () => (
   <AppProvider>
