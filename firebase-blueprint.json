@@ -1,0 +1,105 @@
+{
+  "entities": {
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Broadcast notifications and messages sent by the admin to all app users for specific occasions or updates.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Title of the notification or occasion message"
+        },
+        "message": {
+          "type": "string",
+          "description": "Body content of the broadcast notification"
+        },
+        "occasion": {
+          "type": "string",
+          "description": "Occasion category (e.g. eid, ramadan, jummah, general, update)"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["normal", "high", "urgent"],
+          "description": "Priority level of the broadcast notification"
+        },
+        "senderName": {
+          "type": "string",
+          "description": "Display name of the sender/admin"
+        },
+        "senderEmail": {
+          "type": "string",
+          "description": "Email address of the sender/admin"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp in ISO 8601 format"
+        },
+        "readAt": {
+          "type": "string",
+          "description": "Timestamp when the announcement was first read/viewed by user, triggering 24h auto-deletion"
+        },
+        "targetTab": {
+          "type": "string",
+          "description": "Optional in-app tab link when tapped"
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Whether the announcement is active and visible"
+        }
+      },
+      "required": ["title", "message", "occasion", "createdAt", "isActive"]
+    },
+    "UserMessage": {
+      "title": "UserMessage",
+      "description": "Direct message, prayer request, feedback or notification sent from a user to the admin.",
+      "type": "object",
+      "properties": {
+        "senderName": {
+          "type": "string",
+          "description": "Name of the user sending the message"
+        },
+        "senderEmail": {
+          "type": "string",
+          "description": "Email address of the user for replies"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["feedback", "prayer_request", "question", "notification_pref", "bug_report", "general"],
+          "description": "Category or topic of the message"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject or summary of the message"
+        },
+        "message": {
+          "type": "string",
+          "description": "Detailed body message from the user"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp in ISO 8601 format"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["unread", "read", "replied"],
+          "description": "Review status by the admin"
+        },
+        "readAt": {
+          "type": "string",
+          "description": "Timestamp when the message was read by the admin, triggering 24h auto-deletion"
+        }
+      },
+      "required": ["senderName", "senderEmail", "subject", "message", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/announcements/{announcementId}": {
+      "schema": "Announcement",
+      "description": "Public broadcast announcements and notifications readable by all users."
+    },
+    "/user_messages/{messageId}": {
+      "schema": "UserMessage",
+      "description": "Messages, feedbacks, and questions sent by users to the app admin."
+    }
+  }
+}

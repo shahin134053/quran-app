@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.almuneer.quran',
-  appName: 'Al Muneer Quran',
+  appName: 'Al-Shahin Quran',
   webDir: 'dist',
   server: {
     androidScheme: 'https'

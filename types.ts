@@ -1,5 +1,5 @@
 
-export type AppLanguage = 'en' | 'bn' | 'ar' | 'hi';
+export type AppLanguage = 'en' | 'bn' | 'ar' | 'hi' | 'de' | 'es';
 
 export interface SurahMetadata {
   number: number;
@@ -29,12 +29,18 @@ export interface SurahDetail extends SurahMetadata {
   ayahs: Ayah[];
 }
 
+export type BookmarkCategory = 'all' | 'daily' | 'dua' | 'memorize';
+
 export interface Bookmark {
   surahNumber: number;
   ayahNumber: number;
   surahName: string;
   timestamp: number;
+  category?: BookmarkCategory;
+  note?: string;
 }
+
+export type ReadingViewMode = 'all' | 'arabic-only' | 'translation-only';
 
 export interface LastRead {
   surahNumber: number;
@@ -113,4 +119,56 @@ export interface AudioReciter {
   id: number;
   name: string;
   identifier: string;
+}
+
+export type AnnouncementOccasion = 'eid' | 'ramadan' | 'jummah' | 'general' | 'update' | 'hadith' | 'urgent';
+
+export interface Announcement {
+  id: string;
+  title: string;
+  message: string;
+  occasion: AnnouncementOccasion;
+  priority: 'normal' | 'high' | 'urgent';
+  senderName?: string;
+  senderEmail?: string;
+  createdAt: string;
+  readAt?: string; // Set when user reads/views, triggering 24h auto-deletion
+  targetTab?: string;
+  isActive: boolean;
+}
+
+export type UserMessageCategory = 'general' | 'feedback' | 'prayer_request' | 'question' | 'notification_pref' | 'bug_report';
+
+export interface UserMessage {
+  id: string;
+  senderName: string;
+  senderEmail: string;
+  category: UserMessageCategory;
+  subject: string;
+  message: string;
+  createdAt: string;
+  status: 'unread' | 'read' | 'replied';
+  readAt?: string; // Set when admin reads/views, triggering 24h auto-deletion
+}
+
+export interface NotificationPreferences {
+  enabled: boolean;
+  doNotDisturb: boolean;
+  occasions: boolean;
+  dailyHadithAyah: boolean;
+  appUpdates: boolean;
+  urgentOnly: boolean;
+  soundEnabled: boolean;
+  bannerPopup: boolean;
+}
+
+export interface SimulatedLocation {
+  isActive: boolean;
+  name: string;
+  nameBn?: string;
+  lat: number;
+  lng: number;
+  country?: string;
+  countryCode?: string;
+  timezone?: string;
 }

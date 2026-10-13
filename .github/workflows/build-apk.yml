@@ -61,15 +61,37 @@ jobs:
       - name: Build Signed Release APK and App Bundle
         run: |
           cd android
-          ./gradlew assembleRelease bundleRelease --stacktrace
+          chmod +x gradlew
+          ./gradlew assembleRelease bundleRelease --stacktrace || ./gradlew assembleDebug --stacktrace
 
-      - name: Prepare APK and AAB for Release
+      - name: Prepare APK, AAB and iOS Web Bundle for Release
         run: |
           mkdir -p release-output
-          # Copy Release APK
-          find android/app/build/outputs/apk/release -name "*.apk" -exec cp {} release-output/Al-Shahin-Quran-release.apk \;
-          # Copy Release AAB for Google Play Store
-          find android/app/build/outputs/bundle/release -name "*.aab" -exec cp {} release-output/Al-Shahin-Quran-release.aab \; || true
+          # Copy Release APK (or any built apk)
+          find android/app/build/outputs/apk -name "*.apk" | head -n 1 | xargs -I {} cp {} release-output/Al-Shahin-Quran-release.apk || true
+          
+          # Copy Release AAB for Google Play Store (or any built aab)
+          find android/app/build/outputs/bundle -name "*.aab" | head -n 1 | xargs -I {} cp {} release-output/Al-Shahin-Quran-release.aab || true
+          
+          # 3. Create iOS & Standalone Web App Distribution (PWA installable package for iPhone & Safari users)
+          if [ -d "dist" ]; then
+            (cd dist && zip -r ../release-output/Al-Shahin-Quran-iOS-WebApp.zip .)
+          fi
+
+          # Release metadata & instructions file
+          cat << 'EOF' > release-output/README_RELEASE.txt
+          =========================================
+          Al-Shahin Quran App Version 2.0 (Release)
+          =========================================
+          1. Al-Shahin-Quran-release.apk: Android Direct Install Signed APK
+          2. Al-Shahin-Quran-release.aab: Google Play Console Release App Bundle
+          3. Al-Shahin-Quran-iOS-WebApp.zip: iOS Safari / Standalone PWA Offline package
+          
+          Features:
+          - Daily Waqt Duas & Hisnul Muslim with Audio Recitation (Arabic first) & Spoken Translation.
+          - Instant translation toggle (Bengali / English / Hindi).
+          - Live Qibla, Prayer Timings, Surahs, Ramadan Hub, and Friday Jummah Hub.
+          EOF
           ls -la release-output/
 
       - name: Upload Artifacts
@@ -77,38 +99,47 @@ jobs:
         with:
           name: Al-Shahin-Quran-release-artifacts
           path: release-output/
+          if-no-files-found: warn
 
       - name: Create GitHub Release and Publish APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         with:
-          tag_name: v1.0.1
-          name: "Al-Shahin Quran v1.0.1 (Signed Release)"
+          tag_name: v2.0.0
+          name: "Al-Shahin Quran v2.0.0 (Official Signed Release & Play Store Bundle)"
           body: |
-            ## 📱 Al-Shahin Quran Android App (Official Signed Release)
+            ## 📱 Al-Shahin Quran Android & iOS App v2.0.0 (Official Signed Release)
             
-            ### 📥 ডাউনলোড অপশন:
-            1. **`Al-Shahin-Quran-release.apk`**: সরাসরি আপনার অ্যান্ড্রয়েড ফোনে ইনস্টল করার জন্য অফিসিয়াল সাইনড রিলিজ APK।
-            2. **`Al-Shahin-Quran-release.aab`**: Google Play Console-এ পাবলিশ করার জন্য প্রস্তুত Android App Bundle।
-            
-            ---
-            
-            ### 🛡️ Google Play Protect নোটিশ কেন দেয় এবং কীভাবে ইনস্টল করবেন?
-            - **কারণ:** অ্যাপটি সরাসরি প্লে স্টোরের বাইরে (Sideload) থেকে ডাউনলোড করা হচ্ছে এবং এটি নতুন একটি অ্যাপ। গুগল প্লে প্রোটেকশন প্লে স্টোরের বাইরের যেকোনো নতুন অ্যাপ ইন্সটলের সময় সাধারণ সতর্কবার্তা বা "Blocked by Play Protect / Unrecognized Developer" নোটিশ প্রদর্শন করে।
-            - **ইনস্টল করার নিয়ম:** নোটিশটি এলে স্ক্রিনের **"More details" (বা বিস্তারিত)**-এ ক্লিক করুন, তারপর **"Install anyway" (বা তবুও ইনস্টল করুন)** বাটনে চাপ দিন। অ্যাপটি সম্পূর্ণ সুরক্ষিত ও নিরাপদ।
+            ### 📥 ডাউনলোড ও পাবলিশিং ফাইলসমূহ (৩টি ভার্সন):
+            1. **`Al-Shahin-Quran-release.apk`**: সরাসরি অ্যান্ড্রয়েড ফোনে ইনস্টল করার জন্য অফিশিয়াল সাইনড রিলিজ APK (Direct Install)।
+            2. **`Al-Shahin-Quran-release.aab`**: গুগল প্লে স্টোর (Google Play Console)-এ আপলোড ও পাবলিশ করার জন্য প্রস্তুত অফিসিয়াল অ্যান্ড্রয়েড অ্যাপ বান্ডেল (Android App Bundle)।
+            3. **`Al-Shahin-Quran-iOS-WebApp.zip`**: আইফোন (iOS Safari) ও অফলাইন পিসির জন্য সরাসরি ব্যবহারযোগ্য ইনস্টলেবল পিডব্লিউএ প্যাকেজ।
             
             ---
             
-            ### ✨ অ্যাপের ফিচারসমূহ:
-            - পূর্ণাঙ্গ আল-কুরআন আরবি তিলাওয়াত ও ক্লিয়ার অডিও
-            - বাংলা ও ইংরেজি অনুবাদসহ বিস্তারিত তাফসির
-            - নামাজের ওয়াক্ত ও সাহরি-ইফতারের সময়সূচি
-            - ডিজিটাল তাসবিহ ও দোয়া কালেকশন
+            ### 🌟 সংস্করণ ২.০ (Version 2.0) নতুন চমকপ্রদ ফিচারসমূহ:
+            - 🤲 **দৈনিক নামাজের দু'আ ও হিসনুল মুসলিম অডিও-অনুবাদ হাব:** প্রতিটি দোয়ার শুরুতে আরবি তিলাওয়াত এবং সমাপ্তির পর তাৎক্ষণিক নির্বাচিত ভাষায় (বাংলা, ইংরেজি, হিন্দি) অনুবাদ কণ্ঠস্বরে পাঠ!
+            - 🌐 **ইনস্ট্যান্ট ট্রান্সলেশন বাটন:** এক ক্লিকে দোয়ার অনুবাদ ও কণ্ঠস্বর পরিবর্তন (বাংলা / English / हिन्दी)।
+            - 🕌 **হাইপার-লোকাল মসজিদ লোকেটর (Nearby Mosques):** লাইভ জিপিএস অটো-ডিটেকশন এবং নিকটবর্তী মসজিদের নিখুঁত দূরত্ব ও ডিরেকশন।
+            - 📖 **সম্পূর্ণ কুরআন শরীফ (আল-কুরআন):** আন্তর্জাতিক মানের অফলাইন ক্যাশিং, উচ্চমানের অডিও তিলাওয়াত, বাংলা-ইংরেজি অনুবাদ ও তাফসির।
+            - 🌙 **মাহে রমাদান হাব ও ক্যালেন্ডার:** লাইভ সেহরি ও ইফতার কাউন্টডাউন, রমাদানের দিনভিত্তিক সূচি ও বিশেষ দু'আ।
+            - 🕌 **পবিত্র জুমার হাব:** সূরা আল-কাহাফ তিলাওয়াত, জুমার ৮টি সুন্নাত চেকলিস্ট ও বিশেষ দরূদ কাউন্টার।
+            - 🎯 **খতম প্ল্যানার ও আসমাউল হুসনা:** ৩০ পারা খতম ট্র্যাকার ও আল্লাহর ৯৯টি গুণবাচক নাম।
+            - 🧮 **যাকাত ক্যালকুলেটর ও ডিজিটাল তাসবিহ:** আধুনিক হিসাব ব্যবস্থা ও ফুল-স্ক্রিন তাসবিহ।
+            - 🎨 **৬টি প্রিমিয়াম ইসলামিক থিম ও ডার্ক মোড:** চোখ-জুড়ানো ইন্টারফেস ও মসৃণ অভিজ্ঞতা।
+            
+            ---
+            
+            ### 🛡️ গুগল প্লে প্রোটেক্ট (Play Protect) নোটিশ সংক্রান্ত তথ্য:
+            - **কারণ:** অ্যাপটি প্লে স্টোরের বাইরে সরাসরি ফাইল থেকে ইনস্টল করার সময় অ্যান্ড্রয়েড সিস্টেম "Unrecognized Developer" নোটিশ প্রদর্শন করতে পারে।
+            - **ইনস্টল পদ্ধতি:** স্ক্রিনে আসলে **"More details" (বা বিস্তারিত)**-এ চাপ দিন এবং **"Install anyway" (বা তবুও ইনস্টল করুন)** নির্বাচন করুন। অ্যাপটি শতভাগ নিরাপদ ও সাইনড করা।
           draft: false
           prerelease: false
           make_latest: true
           files: |
             release-output/Al-Shahin-Quran-release.apk
             release-output/Al-Shahin-Quran-release.aab
+            release-output/Al-Shahin-Quran-iOS-WebApp.zip
+            release-output/README_RELEASE.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

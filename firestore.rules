@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Announcements broadcast collection for all app users
+    match /announcements/{announcementId} {
+      allow read: if true;
+      allow create, update: if request.resource.data.title is string 
+                            && request.resource.data.message is string
+                            && request.resource.data.title.size() > 0
+                            && request.resource.data.message.size() > 0;
+      allow delete: if true;
+    }
+
+    // User messages sent to the Admin
+    match /user_messages/{messageId} {
+      allow read: if true;
+      allow create: if request.resource.data.message is string
+                    && request.resource.data.message.size() > 0;
+      allow update, delete: if true;
+    }
+
+    // Health check / connection test document
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

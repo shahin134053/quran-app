@@ -3,6 +3,7 @@ import React from 'react';
 import { Home, Book, Headphones, Quote, Settings, Clock, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { UI_TRANSLATIONS } from '../constants';
+import { OfflineIndicator } from './OfflineIndicator';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -29,6 +30,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab, hide
 
   return (
     <div className={`min-h-[100dvh] flex flex-col transition-colors duration-500 ${bgClass} ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>
+      <OfflineIndicator />
       {/* Dynamic Ambient Background Elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div

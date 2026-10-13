@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Al Muneer Quran</string>
-    <string name="title_activity_main">Al Muneer Quran</string>
+    <string name="app_name">Al-Shahin Quran</string>
+    <string name="title_activity_main">Al-Shahin Quran</string>
     <string name="package_name">com.almuneer.quran</string>
     <string name="custom_url_scheme">com.almuneer.quran</string>
 </resources>

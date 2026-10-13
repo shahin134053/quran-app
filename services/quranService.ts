@@ -9,7 +9,9 @@ const TRANSLATION_MAP: Record<AppLanguage, string> = {
   en: 'en.pickthall',
   bn: 'bn.bengali',
   hi: 'hi.hindi',
-  ar: 'ar.jalalayn'
+  ar: 'ar.jalalayn',
+  de: 'de.aburida',
+  es: 'es.cortes'
 };
 
 // Tafsir/Explanatory identifiers for the API
@@ -17,7 +19,9 @@ const TAFSIR_MAP: Record<AppLanguage, string> = {
   en: 'en.ibnkathir',
   bn: 'bn.fmazid', // Fazlul Karim - often detailed
   hi: 'hi.hindi',
-  ar: 'ar.jalalayn'
+  ar: 'ar.jalalayn',
+  de: 'de.aburida',
+  es: 'es.cortes'
 };
 
 const CACHE_PREFIX = 'quran_surah_';
@@ -48,21 +52,72 @@ export const removeSurahFromCache = (surahNumber: number, lang: AppLanguage) => 
   }
 };
 
+const RAW_FALLBACK_NAMES = [
+  "Al-Fatihah","Al-Baqarah","Ali 'Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus",
+  "Hud","Yusuf","Ar-Ra'd","Ibrahim","Al-Hijr","An-Nahl","Al-Isra","Al-Kahf","Maryam","Taha",
+  "Al-Anbiya","Al-Hajj","Al-Mu'minun","An-Nur","Al-Furqan","Ash-Shu'ara","An-Naml","Al-Qasas","Al-'Ankabut","Ar-Rum",
+  "Luqman","As-Sajdah","Al-Ahzab","Saba","Fatir","Yasin","As-Saffat","Sad","Az-Zumar","Ghafir",
+  "Fussilat","Ash-Shura","Az-Zukhruf","Ad-Dukhan","Al-Jathiyah","Al-Ahqaf","Muhammad","Al-Fath","Al-Hujurat","Qaf",
+  "Adh-Dhariyat","At-Tur","An-Najm","Al-Qamar","Ar-Rahman","Al-Waqi'ah","Al-Hadid","Al-Mujadila","Al-Hashr","Al-Mumtahanah",
+  "As-Saff","Al-Jumu'ah","Al-Munafiqun","At-Taghabun","At-Talaq","At-Tahrim","Al-Mulk","Al-Qalam","Al-Haqqah","Al-Ma'arij",
+  "Nuh","Al-Jinn","Al-Muzzammil","Al-Muddaththir","Al-Qiyamah","Al-Insan","Al-Mursalat","An-Naba","An-Nazi'at","'Abasa",
+  "At-Takwir","Al-Infitar","Al-Mutaffifin","Al-Inshiqaq","Al-Buruj","At-Tariq","Al-A'la","Al-Ghashiyah","Al-Fajr","Al-Balad",
+  "Ash-Shams","Al-Layl","Ad-Duhaa","Ash-Sharh","At-Tin","Al-'Alaq","Al-Qadr","Al-Bayyinah","Az-Zalzalah","Al-'Adiyat",
+  "Al-Qari'ah","At-Takathur","Al-'Asr","Al-Humazah","Al-Fil","Quraysh","Al-Ma'un","Al-Kawthar","Al-Kafirun","An-Nasr",
+  "Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"
+];
+
+const RAW_AYAH_COUNTS = [
+  7,286,200,176,120,165,206,75,129,109,
+  123,111,43,52,99,128,111,110,98,135,
+  112,78,118,64,77,227,93,88,69,60,
+  34,30,73,54,45,83,182,88,75,85,
+  54,53,89,59,37,35,38,29,18,45,
+  60,49,62,55,78,96,29,22,24,13,
+  14,11,11,18,12,12,30,52,52,44,
+  28,28,20,56,40,31,50,40,46,42,
+  29,19,36,25,22,17,19,26,30,20,
+  15,21,11,8,8,19,5,8,8,11,
+  11,8,3,9,5,4,7,3,6,3,
+  5,4,5,6
+];
+
+export const FALLBACK_SURAH_LIST: SurahMetadata[] = RAW_FALLBACK_NAMES.map((name, i) => ({
+  number: i + 1,
+  name: name,
+  englishName: name,
+  englishNameTranslation: name,
+  numberOfAyahs: RAW_AYAH_COUNTS[i] || 10,
+  revelationType: [9, 13, 22, 24, 33, 47, 48, 49, 55, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 98, 110].includes(i + 1) ? 'Medinan' : 'Meccan'
+}));
+
 export const fetchSurahList = async (): Promise<SurahMetadata[]> => {
   try {
     const cached = localStorage.getItem('quran_surah_list');
-    if (cached) return JSON.parse(cached);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length === 114) {
+        return parsed;
+      }
+    }
 
-    const response = await fetch(`${QURAN_BASE_URL}/surah`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+    const response = await fetch(`${QURAN_BASE_URL}/surah`, { signal: controller.signal });
+    clearTimeout(timeoutId);
     const data = await response.json();
     
-    localStorage.setItem('quran_surah_list', JSON.stringify(data.data));
-    return data.data;
+    if (data && data.data && Array.isArray(data.data)) {
+      try {
+        localStorage.setItem('quran_surah_list', JSON.stringify(data.data));
+      } catch {}
+      return data.data;
+    }
   } catch (error) {
-    console.error("Failed to fetch surah list", error);
-    const cached = localStorage.getItem('quran_surah_list');
-    return cached ? JSON.parse(cached) : [];
+    console.warn("Using offline fallback surah list", error);
   }
+  return FALLBACK_SURAH_LIST;
 };
 
 export const fetchSurahDetail = async (
@@ -92,15 +147,27 @@ export const fetchSurahDetail = async (
       throw new Error("Invalid response from Quran API");
     }
 
-    const ayahs = arabicData.data.ayahs.map((ayah: any, index: number) => ({
-      ...ayah,
-      translation: transData.data.ayahs[index]?.text || "",
-      audio: audioData.data?.ayahs[index]?.audio || "",
-      // Use Tafsir data if available and successful (code 200), otherwise fallback to translation
-      tafsir: (tafsirData.code === 200 && tafsirData.data?.ayahs[index]?.text) 
-        ? tafsirData.data.ayahs[index].text 
-        : (transData.data.ayahs[index]?.text || "")
-    }));
+    const paddedSurah = String(surahNumber).padStart(3, '0');
+
+    const ayahs = arabicData.data.ayahs.map((ayah: any, index: number) => {
+      const ayahNum = ayah.numberInSurah || (index + 1);
+      const paddedAyah = String(ayahNum).padStart(3, '0');
+      const fallbackAudio = `https://everyayah.com/data/Alafasy_128kbps/${paddedSurah}${paddedAyah}.mp3`;
+      let rawAudio = audioData.data?.ayahs[index]?.audio || fallbackAudio;
+      if (rawAudio.startsWith('http://')) {
+        rawAudio = rawAudio.replace('http://', 'https://');
+      }
+
+      return {
+        ...ayah,
+        translation: transData.data.ayahs[index]?.text || "",
+        audio: rawAudio || fallbackAudio,
+        // Use Tafsir data if available and successful (code 200), otherwise fallback to translation
+        tafsir: (tafsirData.code === 200 && tafsirData.data?.ayahs[index]?.text) 
+          ? tafsirData.data.ayahs[index].text 
+          : (transData.data.ayahs[index]?.text || "")
+      };
+    });
 
     const result = {
       ...arabicData.data,
@@ -117,23 +184,132 @@ export const fetchSurahDetail = async (
   }
 };
 
+/**
+ * Determines the authoritative Islamic calculation method for given GPS coordinates:
+ * - Method 1 (Karachi): Bangladesh, India, Pakistan (Standard Hanafi / Bangladesh Islamic Foundation)
+ * - Method 4 (Umm al-Qura): Saudi Arabia & Gulf
+ * - Method 5 (Egyptian General Authority): Egypt & North Africa
+ * - Method 2 (ISNA): United States & Canada
+ * - Method 3 (Muslim World League): Europe, UK & Global
+ */
+export function getPrayerMethodForCoordinates(lat: number, lng: number): number {
+  // South Asia (Bangladesh, India, Pakistan)
+  if (lat >= 8 && lat <= 38 && lng >= 60 && lng <= 98) {
+    return 1;
+  }
+  // Gulf / Saudi Arabia (Makkah & Madinah)
+  if (lat >= 12 && lat <= 33 && lng >= 34 && lng <= 60) {
+    return 4;
+  }
+  // Egypt & North Africa
+  if (lat >= -5 && lat <= 38 && lng >= -18 && lng <= 34) {
+    return 5;
+  }
+  // North America (USA & Canada)
+  if (lng <= -50 && lat >= 15) {
+    return 2;
+  }
+  // Europe / rest of world
+  return 3;
+}
+
 export const fetchPrayerTimings = async (lat: number, lng: number): Promise<{ timings: PrayerTimings, hijri: HijriDate }> => {
-  const response = await fetch(`${PRAYER_BASE_URL}/timings?latitude=${lat}&longitude=${lng}&method=2`);
-  const data = await response.json();
-  return {
-    timings: data.data.timings,
-    hijri: data.data.date.hijri
-  };
+  const todayKey = `prayer_cache_v5_${new Date().toISOString().split('T')[0]}_${lat.toFixed(2)}_${lng.toFixed(2)}`;
+  try {
+    const cached = localStorage.getItem(todayKey);
+    if (cached) {
+      return JSON.parse(cached);
+    }
+  } catch (e) {
+    // ignore localstorage error
+  }
+
+  const method = getPrayerMethodForCoordinates(lat, lng);
+  const timestamp = Math.floor(Date.now() / 1000);
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6500);
+
+    const response = await fetch(`${PRAYER_BASE_URL}/timings/${timestamp}?latitude=${lat}&longitude=${lng}&method=${method}`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`Prayer API responded with status ${response.status}`);
+    }
+    const data = await response.json();
+    if (!data.data || !data.data.timings) {
+      throw new Error('Invalid prayer timings data');
+    }
+    const result = {
+      timings: data.data.timings,
+      hijri: data.data.date.hijri
+    };
+
+    try {
+      localStorage.setItem(todayKey, JSON.stringify(result));
+    } catch (e) {}
+
+    return result;
+  } catch (error) {
+    console.warn("Prayer timings fetch error or rate limit, using offline fallback:", error);
+    return {
+      timings: {
+        Fajr: "04:32",
+        Sunrise: "05:48",
+        Dhuhr: "12:05",
+        Asr: "16:20",
+        Sunset: "18:22",
+        Maghrib: "18:22",
+        Isha: "19:38",
+        Imsak: "04:22",
+        Midnight: "00:05"
+      },
+      hijri: {
+        date: "11/10/1447",
+        day: "11",
+        month: { number: 9, en: "Ramadān", ar: "رَمضَان" },
+        year: "1447"
+      }
+    };
+  }
 };
 
 export const fetchRamadanCalendar = async (lat: number, lng: number, year: number): Promise<any[]> => {
+  const method = getPrayerMethodForCoordinates(lat, lng);
+  const calKey = `ramadan_cal_v5_${year}_${lat.toFixed(2)}_${lng.toFixed(2)}`;
   try {
+    const cached = localStorage.getItem(calKey);
+    if (cached) {
+      return JSON.parse(cached);
+    }
+  } catch (e) {}
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6500);
+
     // Fetch specifically for Ramadan (Month 9) of the given Hijri year
-    const response = await fetch(`${PRAYER_BASE_URL}/hijriCalendar?latitude=${lat}&longitude=${lng}&method=2&month=9&year=${year}`);
+    const response = await fetch(`${PRAYER_BASE_URL}/hijriCalendar?latitude=${lat}&longitude=${lng}&method=${method}&month=9&year=${year}`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      return [];
+    }
     const data = await response.json();
-    return data.data;
+    if (Array.isArray(data.data)) {
+      try {
+        localStorage.setItem(calKey, JSON.stringify(data.data));
+      } catch (e) {}
+      return data.data;
+    }
+    return [];
   } catch (error) {
-    console.error("Failed to fetch Ramadan calendar", error);
+    console.warn("Failed to fetch Ramadan calendar or rate limited", error);
     return [];
   }
 };

@@ -1,5 +1,5 @@
-export const CURRENT_APP_VERSION = '1.0.1';
-export const GITHUB_REPO = 'shahinprpl-sketch/quran-app';
+export const CURRENT_APP_VERSION = '2.0.0';
+export const GITHUB_REPO = 'shahin134053/quran-app';
 
 export interface UpdateInfo {
   hasUpdate: boolean;
@@ -45,13 +45,19 @@ export const checkForAppUpdate = async (force: boolean = false): Promise<UpdateI
       }
     }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+
     const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`, {
       headers: {
         'Accept': 'application/vnd.github.v3+json'
-      }
+      },
+      signal: controller.signal
     });
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
+      localStorage.setItem('last_update_check_timestamp', now.toString());
       return null;
     }
 

@@ -1,11 +1,12 @@
 {
-  "name": "al-muneer-quran",
+  "name": "al-shahin-quran",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node -e \"import('node:fs').then(fs => { if(fs.existsSync('dist')){ fs.cpSync('dist','build',{recursive:true}); fs.cpSync('dist','out',{recursive:true}); } })\"",
+    "start": "node server.ts",
     "lint": "tsc",
     "preview": "vite preview",
     "cap:sync": "npm run build && npx cap sync",
@@ -14,15 +15,26 @@
   "dependencies": {
     "@capacitor/android": "^8.1.0",
     "@capacitor/core": "^8.1.0",
+    "express": "^5.3.0",
+    "firebase": "^13.0.0",
     "framer-motion": "^12.34.3",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
     "lucide-react": "^0.564.0",
+    "qrcode.react": "^4.2.0",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "tsx": "^4.23.15"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.1.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/express": "^5.0.6",
     "@types/node": "^22.14.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "tailwindcss": "^4.3.3",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
     "vite-plugin-pwa": "^1.2.0"

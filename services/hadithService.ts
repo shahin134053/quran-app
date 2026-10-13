@@ -34,7 +34,9 @@ const LANGUAGE_MAP: Record<AppLanguage, string> = {
   en: 'eng',
   bn: 'ben',
   hi: 'eng', // Fallback to English for Hindi as it's not widely available in this API
-  ar: 'ara'
+  ar: 'ara',
+  de: 'eng',
+  es: 'eng'
 };
 
 export const fetchHadiths = async (

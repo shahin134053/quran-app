@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AppLanguage, ThemeMode, Bookmark, LastRead, IslamicUITheme, UIThemeConfig } from '../types';
+import { AppLanguage, ThemeMode, Bookmark, LastRead, IslamicUITheme, UIThemeConfig, SimulatedLocation } from '../types';
 import { ISLAMIC_THEMES } from '../themes';
 
 interface AppContextType {
@@ -22,22 +22,66 @@ interface AppContextType {
   updateLastRead: (lastRead: LastRead) => void;
   userName: string;
   setUserName: (name: string) => void;
+  simulatedLocation: SimulatedLocation | null;
+  setSimulatedLocation: (loc: SimulatedLocation | null) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<AppLanguage>(() => (localStorage.getItem('lang') as AppLanguage) || 'en');
-  const [theme, setTheme] = useState<ThemeMode>(() => (localStorage.getItem('theme') as ThemeMode) || ThemeMode.LIGHT);
-  const [islamicTheme, setIslamicTheme] = useState<IslamicUITheme>(() => {
-    const saved = localStorage.getItem('islamic_theme') as IslamicUITheme;
-    return saved && ISLAMIC_THEMES[saved] ? saved : 'noor-madina';
+  const [language, setLanguage] = useState<AppLanguage>(() => {
+    try { return (localStorage.getItem('lang') as AppLanguage) || 'bn'; } catch { return 'bn'; }
   });
-  const [arabicFontSize, setArabicFontSize] = useState<number>(() => Number(localStorage.getItem('arSize')) || 24);
-  const [translationFontSize, setTranslationFontSize] = useState<number>(() => Number(localStorage.getItem('trSize')) || 16);
-  const [bookmarks, setBookmarks] = useState<Bookmark[]>(() => JSON.parse(localStorage.getItem('bookmarks') || '[]'));
-  const [lastRead, setLastRead] = useState<LastRead | null>(() => JSON.parse(localStorage.getItem('lastRead') || 'null'));
-  const [userName, setUserName] = useState<string>(() => localStorage.getItem('userName') || '');
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    try { return (localStorage.getItem('theme') as ThemeMode) || ThemeMode.LIGHT; } catch { return ThemeMode.LIGHT; }
+  });
+  const [islamicTheme, setIslamicTheme] = useState<IslamicUITheme>(() => {
+    try {
+      const saved = localStorage.getItem('islamic_theme') as IslamicUITheme;
+      return saved && ISLAMIC_THEMES[saved] ? saved : 'noor-madina';
+    } catch {
+      return 'noor-madina';
+    }
+  });
+  const [arabicFontSize, setArabicFontSize] = useState<number>(() => {
+    try { return Number(localStorage.getItem('arSize')) || 24; } catch { return 24; }
+  });
+  const [translationFontSize, setTranslationFontSize] = useState<number>(() => {
+    try { return Number(localStorage.getItem('trSize')) || 16; } catch { return 16; }
+  });
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>(() => {
+    try {
+      const raw = localStorage.getItem('bookmarks');
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  });
+  const [lastRead, setLastRead] = useState<LastRead | null>(() => {
+    try {
+      const raw = localStorage.getItem('lastRead');
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  });
+  const [userName, setUserName] = useState<string>(() => {
+    try { return localStorage.getItem('userName') || ''; } catch { return ''; }
+  });
+  const [simulatedLocation, setSimulatedLocationState] = useState<SimulatedLocation | null>(() => {
+    try {
+      const saved = localStorage.getItem('al_muneer_test_location');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return null;
+  });
+
+  const setSimulatedLocation = (loc: SimulatedLocation | null) => {
+    setSimulatedLocationState(loc);
+    try {
+      if (loc && loc.isActive) {
+        localStorage.setItem('al_muneer_test_location', JSON.stringify(loc));
+      } else {
+        localStorage.removeItem('al_muneer_test_location');
+      }
+    } catch {}
+  };
 
   const activeThemeConfig = ISLAMIC_THEMES[islamicTheme] || ISLAMIC_THEMES['noor-madina'];
 
@@ -52,16 +96,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('userName', userName);
 
     document.documentElement.setAttribute('data-islamic-theme', islamicTheme);
+    document.documentElement.style.setProperty('--theme-primary', activeThemeConfig.primaryColor);
+    document.documentElement.style.setProperty('--theme-primary-light', activeThemeConfig.primaryLight);
+    document.documentElement.style.setProperty('--theme-primary-dark', activeThemeConfig.primaryDark);
+    document.documentElement.style.setProperty('--theme-accent-gold', activeThemeConfig.accentGold);
 
-    if (theme === ThemeMode.DARK) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    const isDarkMode = theme === ThemeMode.DARK;
+    document.documentElement.classList.toggle('dark', isDarkMode);
+    document.body.classList.toggle('dark', isDarkMode);
+    document.documentElement.style.colorScheme = isDarkMode ? 'dark' : 'light';
   }, [language, theme, islamicTheme, arabicFontSize, translationFontSize, bookmarks, lastRead, userName]);
 
   const addBookmark = (bookmark: Bookmark) => {
-    setBookmarks(prev => [...prev, bookmark]);
+    setBookmarks(prev => {
+      const filtered = prev.filter(b => !(b.surahNumber === bookmark.surahNumber && b.ayahNumber === bookmark.ayahNumber));
+      return [...filtered, bookmark];
+    });
   };
 
   const removeBookmark = (surah: number, ayah: number) => {
@@ -82,7 +132,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       translationFontSize, setTranslationFontSize,
       bookmarks, addBookmark, removeBookmark,
       lastRead, updateLastRead,
-      userName, setUserName
+      userName, setUserName,
+      simulatedLocation, setSimulatedLocation
     }}>
       {children}
     </AppContext.Provider>
