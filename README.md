@@ -1,6 +1,20 @@
-# Al Muneer Quran - Mobile App
+# 📖 Al-Shahin Quran (আল-শাহীন কুরআন)
 
-This project is configured to be built as a Progressive Web App (PWA) and a native Android app using Capacitor.
+[![Latest Release](https://img.shields.io/badge/Release-v2.0.1%20Latest-emerald?style=for-the-badge&logo=android)](https://github.com/shahin134053/quran-app/releases/tag/v2.0.1)
+[![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web-blue?style=for-the-badge)](https://github.com/shahin134053/quran-app/releases/tag/v2.0.1)
+
+---
+
+### 📌 অফিশিয়াল পিন্ড রিলিজ (Latest Official Release v2.0.1):
+| প্ল্যাটফর্ম / ফাইল | বিবরণ | সরাসরি ডাউনলোড |
+| :--- | :--- | :--- |
+| 📲 **Android APK** | সরাসরি ফোনে ইনস্টলযোগ্য সাইনড APK (Direct Install) | [📥 Download APK (v2.0.1)](https://github.com/shahin134053/quran-app/releases/download/v2.0.1/Al-Shahin-Quran-release.apk) |
+| 📦 **Google Play Bundle** | প্লে স্টোরে আপলোডের জন্য প্রস্তুত সাইনড AAB ফাইল | [📥 Download AAB (v2.0.1)](https://github.com/shahin134053/quran-app/releases/download/v2.0.1/Al-Shahin-Quran-release.aab) |
+| 🍎 **iPhone & Web Bundle** | আইফোন Safari ও অফলাইন ব্যবহারের PWA জিপ ফাইল | [📥 Download iOS WebApp](https://github.com/shahin134053/quran-app/releases/download/v2.0.1/Al-Shahin-Quran-iOS-WebApp.zip) |
+
+🔗 **[সম্পূর্ণ রিলিজ নোটস ও ফাইল দেখুন](https://github.com/shahin134053/quran-app/releases/tag/v2.0.1)**
+
+---
 
 ## Prerequisites
 
