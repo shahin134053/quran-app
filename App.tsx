@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Layout from './components/Layout';
 import { useApp, AppProvider } from './context/AppContext';
@@ -217,6 +216,9 @@ const OfflineManager: React.FC = () => {
 
 const AppContent: React.FC = () => {
   const [showSplash, setShowSplash] = useState(false);
+  const handleDismissSplash = useCallback(() => {
+    setShowSplash(false);
+  }, []);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
   const [previousTab, setPreviousTab] = useState('home');
@@ -3001,10 +3003,6 @@ const AppContent: React.FC = () => {
       </div>
     </motion.div>
   );
-
-  const handleDismissSplash = React.useCallback(() => {
-    setShowSplash(false);
-  }, []);
 
   return (
     <>
