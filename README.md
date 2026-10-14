@@ -1,66 +1,60 @@
-# 📖 Al-Shahin Quran (আল-শাহীন কুরআন)
+<div align="center">
 
-[![Latest Release](https://img.shields.io/badge/Release-v2.0.1%20Latest-emerald?style=for-the-badge&logo=android)](https://github.com/shahin134053/quran-app/releases/tag/v2.0.1)
-[![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web-blue?style=for-the-badge)](https://github.com/shahin134053/quran-app/releases/tag/v2.0.1)
+# 📖 আল-শাহীন কুরআন (Al-Shahin Quran)
+### সর্বাধুনিক, ডিজিটাল ও সমৃদ্ধ ইসলামিক মোবাইল অ্যাপ্লিকেশন
+
+[![Latest Release](https://img.shields.io/badge/Release-v2.0.1%20(Latest)-059669?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahin134053/quran-app/releases/latest)
+[![Direct APK Download](https://img.shields.io/badge/Download-APK%20(Android)-10b981?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.apk)
+[![Play Store Bundle](https://img.shields.io/badge/Download-AAB%20(Play%20Store)-2563eb?style=for-the-badge&logo=googleplay&logoColor=white)](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.aab)
+[![iOS WebApp Bundle](https://img.shields.io/badge/Download-iOS%20%2F%20PWA%20Package-9333ea?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-iOS-WebApp.zip)
+
+</div>
 
 ---
 
-### 📌 অফিশিয়াল পিন্ড রিলিজ (Latest Official Release v2.0.1):
-| প্ল্যাটফর্ম / ফাইল | বিবরণ | সরাসরি ডাউনলোড |
+## 📥 সরাসরি অ্যাপ ডাউনলোড লিংক (Download Latest Version)
+
+যে কেউ নিচের লিংকে ক্লিক করে সরাসরি অ্যাপটি ডাউনলোড করে ব্যবহার করতে পারবেন। এখানে সবসময় স্বয়ংক্রিয়ভাবে সর্বশেষ (Latest) ভার্সনটি পিন করা থাকবে:
+
+| ফাইল / সংস্করণ | বিবরণ ও প্ল্যাটফর্ম | সরাসরি এক-ক্লিক ডাউনলোড |
 | :--- | :--- | :--- |
-| 📲 **Android APK** | সরাসরি ফোনে ইনস্টলযোগ্য সাইনড APK (Direct Install) | [📥 Download APK (v2.0.1)](https://github.com/shahin134053/quran-app/releases/download/v2.0.1/Al-Shahin-Quran-release.apk) |
-| 📦 **Google Play Bundle** | প্লে স্টোরে আপলোডের জন্য প্রস্তুত সাইনড AAB ফাইল | [📥 Download AAB (v2.0.1)](https://github.com/shahin134053/quran-app/releases/download/v2.0.1/Al-Shahin-Quran-release.aab) |
-| 🍎 **iPhone & Web Bundle** | আইফোন Safari ও অফলাইন ব্যবহারের PWA জিপ ফাইল | [📥 Download iOS WebApp](https://github.com/shahin134053/quran-app/releases/download/v2.0.1/Al-Shahin-Quran-iOS-WebApp.zip) |
+| 📲 **Android APK** | অ্যান্ড্রয়েড ফোনের জন্য অফিসিয়াল সাইনড রিলিজ APK (~৪.১১ MB) | [⬇️ **Download Latest APK**](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.apk) |
+| 📦 **Play Store AAB** | গুগল প্লে স্টোরে আপলোডের জন্য সাইনড অ্যান্ড্রয়েড অ্যাপ বান্ডেল (~৩.৯৬ MB) | [⬇️ **Download Latest AAB**](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.aab) |
+| 🍎 **iPhone / Web PWA** | আইফোনের জন্য অফলাইন PWA ও ওয়েব অ্যাপ্লিকেশন প্যাকেজ (~০.৯৬ MB) | [⬇️ **Download iOS WebApp Bundle**](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-iOS-WebApp.zip) |
 
-🔗 **[সম্পূর্ণ রিলিজ নোটস ও ফাইল দেখুন](https://github.com/shahin134053/quran-app/releases/tag/v2.0.1)**
+🔗 **[📌 অফিসিয়াল গিটহাব রিলিজ পাতা ও পরিবর্তনের বিবরণী দেখুন](https://github.com/shahin134053/quran-app/releases/latest)**
 
 ---
 
-## Prerequisites
+## 📱 ইনস্টলেশন নির্দেশিকা (How to Install):
 
-- Node.js and npm
-- Android Studio (for building the APK)
+### অ্যান্ড্রয়েডের জন্য (Android):
+1. উপরের **Download Latest APK** বাটনে ক্লিক করে ফাইলটি ডাউনলোড করুন।
+2. ডাউনলোড শেষ হলে নোটিফিকেশন বা ফাইল ম্যানেজার থেকে ফাইলে ক্লিক করে **Install** নির্বাচন করুন।
+3. *(যদি Google Play Protect থেকে আনরেকগনাইজড ডেভেলপার সতর্কতা আসে, তবে **"More details"**-এ চাপ দিয়ে **"Install anyway"** নির্বাচন করুন। অ্যাপটি সম্পূর্ণ নিরাপদ ও সুরক্ষিত)*
 
-## Setup
+### আইফোনের জন্য (iPhone / iOS):
+1. সাফারি (Safari) ব্রাউজারে অ্যাপটির ওয়েব সংস্করণ ওপেন করুন।
+2. নিচের **Share** আইকনে চাপ দিন।
+3. তালিকা থেকে **"Add to Home Screen"** নির্বাচন করুন। অ্যাপটি আইফোনের হোম স্ক্রিনে নেটিভ অ্যাপের মতো যুক্ত হয়ে যাবে।
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+---
 
-2. Initialize Capacitor (if not already done):
-   ```bash
-   npx cap add android
-   ```
+## 🌟 অ্যাপের প্রধান ফিচারসমূহ:
 
-## Building the Android App
+* 🤲 **দৈনিক ওয়াক্তের দু'আ ও ধারাবাহিক অডিও হাব:** আরবি তিলাওয়াতের পর স্বয়ংক্রিয়ভাবে নির্বাচিত ভাষায় (বাংলা, ইংরেজি, হিন্দি) ভয়েস অনুবাদ পাঠ এবং ইনস্ট্যান্ট ট্রান্সলেট সুইচ।
+* 🕌 **হাইপার-লোকাল মসজিদ ফাইন্ডার (Nearby Mosques):** জিপিএস অটো-ডিটেকশন এবং নিকটবর্তী মসজিদের সঠিক দূরত্ব ও রুট।
+* 📖 **সম্পূর্ণ আল-কুরআন:** উচ্চমানের অডিও তিলাওয়াত, বাংলা-ইংরেজি উচ্চারণ, অনুবাদ ও সংক্ষিপ্ত তাফসির।
+* 🌙 **রমাদান হাব ও ক্যালেন্ডার:** লাইভ সেহরি ও ইফতার কাউন্টডাউন ও দিনভিত্তিক রোযার সূচি।
+* 🕌 **পবিত্র জুমার হাব:** সূরা আল-কাহাফ তিলাওয়াত, ৮টি সুন্নাত চেকলিস্ট ও বিশেষ দরূদ কাউন্টার।
+* 🎯 **খতম প্ল্যানার ও আসমাউল হুসনা:** ৩০ পারা খতম ট্র্যাকার ও আল্লাহর ৯৯টি পবিত্র নাম।
+* 🧮 **যাকাত ক্যালকুলেটর ও ডিজিটাল তাসবিহ:** আধুনিক হিসাব ব্যবস্থা ও স্পর্শকাতর তাসবিহ।
+* 🎨 **৬টি প্রিমিয়াম ইসলামিক থিম:** ডার্ক মোড ও চোখ-জুড়ানো ইন্টারফেস।
 
-1. Build the web app and sync with Capacitor:
-   ```bash
-   npm run cap:sync
-   ```
+---
 
-2. Open the project in Android Studio:
-   ```bash
-   npm run cap:open
-   ```
-
-3. In Android Studio, wait for the project to sync, then click the "Run" button (green play icon) to run on an emulator or connected device.
-
-4. To build a signed APK for the Play Store:
-   - Go to **Build > Generate Signed Bundle / APK**.
-   - Select **Android App Bundle** or **APK**.
-   - Follow the wizard to create a keystore and sign your app.
-
-## PWA Features
-
-The app is configured as a PWA. It can be installed directly from the browser on mobile devices.
-
-- **Manifest:** `vite-plugin-pwa` automatically generates `manifest.json`.
-- **Service Worker:** Included for offline capabilities.
-- **Icons:** Uses `public/icon.svg` as the app icon.
-
-## Troubleshooting
-
-- If you encounter issues with `npx cap open android`, ensure Android Studio is installed and the `ANDROID_HOME` environment variable is set correctly.
-- If the build fails, check the console output for errors.
+## 🛠️ ডেভেলপার ইনফো (Developer Info)
+* **প্রকল্পের নাম:** আল-শাহীন কুরআন (Al-Shahin Quran)
+* **ডেভেলপার:** মো: শাহীন (MD Shahin)
+* **রিলিজ সংস্করণ:** v2.0.1 (Latest)
+* **লাইসেন্স:** MIT
