@@ -310,7 +310,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
 
                           <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between text-[11px] text-slate-400">
                             <span className="font-bold">
-                              {item.senderName || 'Al-Muneer Admin'}
+                              {item.senderName || 'Al-Shahin Admin'}
                             </span>
                             {item.targetTab && (
                               <span className="text-amber-600 dark:text-amber-400 font-black flex items-center gap-0.5">

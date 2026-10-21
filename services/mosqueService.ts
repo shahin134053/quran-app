@@ -406,7 +406,7 @@ export async function getMosquesForLocation(
   radiusKm: number = 3,
   isBn: boolean = true
 ): Promise<MosqueItem[]> {
-  const cacheKey = `almuneer_mosques_v6_${lat.toFixed(3)}_${lon.toFixed(3)}_${radiusKm}`;
+  const cacheKey = `alshahin_mosques_v6_${lat.toFixed(3)}_${lon.toFixed(3)}_${radiusKm}`;
 
   try {
     const cached = localStorage.getItem(cacheKey);

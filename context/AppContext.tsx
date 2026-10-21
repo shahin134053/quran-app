@@ -66,7 +66,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
   const [simulatedLocation, setSimulatedLocationState] = useState<SimulatedLocation | null>(() => {
     try {
-      const saved = localStorage.getItem('al_muneer_test_location');
+      const saved = localStorage.getItem('al_shahin_test_location');
       if (saved) return JSON.parse(saved);
     } catch {}
     return null;
@@ -76,9 +76,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setSimulatedLocationState(loc);
     try {
       if (loc && loc.isActive) {
-        localStorage.setItem('al_muneer_test_location', JSON.stringify(loc));
+        localStorage.setItem('al_shahin_test_location', JSON.stringify(loc));
       } else {
-        localStorage.removeItem('al_muneer_test_location');
+        localStorage.removeItem('al_shahin_test_location');
       }
     } catch {}
   };

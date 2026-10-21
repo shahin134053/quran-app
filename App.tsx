@@ -237,7 +237,7 @@ const AppContent: React.FC = () => {
   const [locationName, setLocationName] = useState('');
   const [userCoordinates, setUserCoordinates] = useState<{ lat: number; lng: number }>(() => {
     try {
-      const rawSim = localStorage.getItem('al_muneer_test_location');
+      const rawSim = localStorage.getItem('al_shahin_test_location');
       if (rawSim) {
         const parsed = JSON.parse(rawSim);
         if (parsed?.isActive && typeof parsed?.lat === 'number' && typeof parsed?.lng === 'number') {
@@ -508,8 +508,8 @@ const AppContent: React.FC = () => {
       message: body,
       occasion: 'ramadan',
       priority: 'urgent',
-      senderName: 'Al-Muneer System',
-      senderEmail: 'system@almuneer.app',
+      senderName: 'Al-Shahin System',
+      senderEmail: 'system@alshahin.app',
       createdAt: new Date().toISOString(),
       isActive: true
     });
@@ -693,7 +693,7 @@ const AppContent: React.FC = () => {
 
       for (const p of prayers) {
         if (p.time && currentTimeStr === p.time) {
-          const storageKey = `al_muneer_reminded_${todayDateStr}_${p.key}`;
+          const storageKey = `al_shahin_reminded_${todayDateStr}_${p.key}`;
           const alreadyReminded = localStorage.getItem(storageKey);
           if (!alreadyReminded) {
             localStorage.setItem(storageKey, 'true');
@@ -716,7 +716,7 @@ const AppContent: React.FC = () => {
       if (dayOfWeek === 5) {
         const fajrTime = normalizePrayerTimeTo24H(timings.Fajr, 'Fajr');
         if (fajrTime && currentTimeStr === fajrTime) {
-          const fridayStorageKey = `al_muneer_friday_amol_${todayDateStr}`;
+          const fridayStorageKey = `al_shahin_friday_amol_${todayDateStr}`;
           const alreadyFiredFriday = localStorage.getItem(fridayStorageKey);
           if (!alreadyFiredFriday) {
             localStorage.setItem(fridayStorageKey, 'true');
@@ -736,7 +736,7 @@ const AppContent: React.FC = () => {
 
         const dhuhrTime = normalizePrayerTimeTo24H(timings.Dhuhr, 'Dhuhr');
         if (dhuhrTime && currentTimeStr === dhuhrTime) {
-          const jummahPrayerKey = `al_muneer_jummah_prayer_${todayDateStr}`;
+          const jummahPrayerKey = `al_shahin_jummah_prayer_${todayDateStr}`;
           const alreadyFiredJummah = localStorage.getItem(jummahPrayerKey);
           if (!alreadyFiredJummah) {
             localStorage.setItem(jummahPrayerKey, 'true');

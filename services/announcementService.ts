@@ -15,8 +15,8 @@ import { Announcement, NotificationPreferences, UserMessage, UserMessageCategory
 
 const ANNOUNCEMENTS_COLLECTION = 'announcements';
 const USER_MESSAGES_COLLECTION = 'user_messages';
-const READ_STORAGE_KEY = 'al_muneer_read_announcements';
-const PREFS_STORAGE_KEY = 'al_muneer_notification_prefs';
+const READ_STORAGE_KEY = 'al_shahin_read_announcements';
+const PREFS_STORAGE_KEY = 'al_shahin_notification_prefs';
 
 /** 24 Hours in Milliseconds for Auto-Cleanup (0 KB Backend Policy) */
 export const TTL_DURATION_MS = 24 * 60 * 60 * 1000;
@@ -257,7 +257,7 @@ export function subscribeAnnouncements(
             message: data.message || '',
             occasion: data.occasion || 'general',
             priority: data.priority || 'normal',
-            senderName: data.senderName || 'Al-Muneer Admin',
+            senderName: data.senderName || 'Al-Shahin Admin',
             senderEmail: data.senderEmail || '',
             createdAt: data.createdAt || new Date().toISOString(),
             readAt: data.readAt || undefined,
@@ -270,15 +270,15 @@ export function subscribeAnnouncements(
         list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         onUpdate(list);
 
-        const hasInitialSeeded = typeof window !== 'undefined' ? localStorage.getItem('al_muneer_initial_announcement_seeded') : 'true';
+        const hasInitialSeeded = typeof window !== 'undefined' ? localStorage.getItem('al_shahin_initial_announcement_seeded') : 'true';
         if (snapshot.empty && !hasInitialSeeded) {
           if (typeof window !== 'undefined') {
-            localStorage.setItem('al_muneer_initial_announcement_seeded', 'true');
+            localStorage.setItem('al_shahin_initial_announcement_seeded', 'true');
           }
           // Auto-seed initial official welcome announcement ONLY ONCE EVER on pristine install
           addDoc(colRef, {
-            title: 'আল-মুনীর অ্যাপে স্বাগতম ও বরকতময় শুভেচ্ছা! 🌙✨',
-            message: 'আসসালামু আলাইকুম ওয়ারাহমাতুল্লাহ। আল-মুনীর ইসলামিক প্ল্যাটফর্মে আপনাকে স্বাগতম। এখানে আপনি পবিত্র কুরআন তিলাওয়াত, সহীহ হাদিস, নামাজের সঠিক সময়সূচি এবং অ্যাডমিনের প্রেরিত যেকোনো অকেশনের তাৎক্ষণিক নোটিফিকেশন পাবেন।',
+            title: 'আল-শাহীন কুরআন অ্যাপে স্বাগতম ও বরকতময় শুভেচ্ছা! 🌙✨',
+            message: 'আসসালামু আলাইকুম ওয়ারাহমাতুল্লাহ। আল-শাহীন কুরআন ইসলামিক প্ল্যাটফর্মে আপনাকে স্বাগতম। এখানে আপনি পবিত্র কুরআন তিলাওয়াত, সহীহ হাদিস, নামাজের সঠিক সময়সূচি এবং যেকোনো প্রয়োজনীয় নোটিফিকেশন পাবেন।',
             occasion: 'ramadan',
             priority: 'high',
             senderName: 'Md Shahin (Admin)',
@@ -319,7 +319,7 @@ export async function sendAnnouncement(payload: {
     message: payload.message.trim(),
     occasion: payload.occasion,
     priority: payload.priority,
-    senderName: payload.senderName || 'Al-Muneer Admin',
+    senderName: payload.senderName || 'Al-Shahin Admin',
     senderEmail: payload.senderEmail || 'shahin.prpl@gmail.com',
     targetTab: payload.targetTab || '',
     isActive: true,

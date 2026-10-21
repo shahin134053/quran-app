@@ -5,7 +5,7 @@ export interface DailyVerseReminderConfig {
   notifyWithAudio: boolean;
 }
 
-const STORAGE_KEY = 'al_muneer_daily_verse_reminder_config';
+const STORAGE_KEY = 'al_shahin_daily_verse_reminder_config';
 
 export function getDailyVerseReminderConfig(): DailyVerseReminderConfig {
   try {

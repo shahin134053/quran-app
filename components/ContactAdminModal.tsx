@@ -56,7 +56,7 @@ export const ContactAdminModal: React.FC<ContactAdminModalProps> = ({
         senderName: senderName.trim() || (language === 'bn' ? 'সম্মানিত ব্যবহারকারী' : 'Valued User'),
         senderEmail: senderEmail.trim(),
         category,
-        subject: subject.trim() || (language === 'bn' ? 'আল-মুনীর অ্যাপ ব্যবহারকারীর বার্তা' : 'Al-Muneer User Message'),
+        subject: subject.trim() || (language === 'bn' ? 'আল-শাহীন কুরআন অ্যাপ ব্যবহারকারীর বার্তা' : 'Al-Shahin Quran User Message'),
         message: message.trim(),
       });
 
@@ -75,9 +75,9 @@ export const ContactAdminModal: React.FC<ContactAdminModalProps> = ({
 
   const handleOpenEmail = () => {
     const formattedSubject = encodeURIComponent(
-      `[Al-Muneer App Feedback] ${subject.trim() || 'User Message'}`
+      `[Al-Shahin Quran Feedback] ${subject.trim() || 'User Message'}`
     );
-    const bodyText = `নাম: ${senderName || 'Anonymous'}\nইমেইল: ${senderEmail || 'N/A'}\nবিভাগ: ${category}\n\nবার্তা:\n${message}\n\n---\nSent from Al-Muneer Islamic Web App`;
+    const bodyText = `নাম: ${senderName || 'Anonymous'}\nইমেইল: ${senderEmail || 'N/A'}\nবিভাগ: ${category}\n\nবার্তা:\n${message}\n\n---\nSent from Al-Shahin Quran App`;
     const formattedBody = encodeURIComponent(bodyText);
 
     window.open(`mailto:${ADMIN_EMAIL}?subject=${formattedSubject}&body=${formattedBody}`, '_blank');

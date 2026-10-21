@@ -85,9 +85,9 @@ const OCCASION_TEMPLATES = [
   },
 ];
 
-const ADMIN_PIN_STORAGE_KEY = 'al_muneer_admin_auth_v2';
+const ADMIN_PIN_STORAGE_KEY = 'al_shahin_admin_auth_v2';
 const ADMIN_DEFAULT_SECURITY_PIN = '830973';
-const ADMIN_CUSTOM_PASSWORD_KEY = 'al_muneer_admin_custom_password';
+const ADMIN_CUSTOM_PASSWORD_KEY = 'al_shahin_admin_custom_password';
 
 // Convert Bengali numerals to standard English digits for easy login
 const normalizePinInput = (input: string): string => {
@@ -346,7 +346,7 @@ export const AdminBroadcastModal: React.FC<AdminBroadcastModalProps> = ({
   const handleReplyEmail = async (msg: UserMessage) => {
     await updateUserMessageStatus(msg.id, 'replied');
     const subject = encodeURIComponent(`Re: ${msg.subject}`);
-    const body = encodeURIComponent(`আসসালামু আলাইকুম ${msg.senderName},\n\nআল-মুনীর অ্যাপে আপনার বার্তার জন্য ধন্যবাদ।\n\n>\n> "${msg.message}"\n>\n\nআমাদের উত্তর:\n\n\n\nজাযাকুমুল্লাহু খাইরান,\nMd Shahin (Admin)\nAl-Muneer Islamic App`);
+    const body = encodeURIComponent(`আসসালামু আলাইকুম ${msg.senderName},\n\nআল-শাহীন কুরআন অ্যাপে আপনার বার্তার জন্য ধন্যবাদ।\n\n>\n> "${msg.message}"\n>\n\nআমাদের উত্তর:\n\n\n\nজাযাকুমুল্লাহু খাইরান,\nMd Shahin (Admin)\nAl-Shahin Quran App`);
     window.open(`mailto:${msg.senderEmail}?subject=${subject}&body=${body}`, '_blank');
   };
 
