@@ -3033,6 +3033,7 @@ const AppContent: React.FC = () => {
                 currentCoordinates={userCoordinates} 
                 locationName={locationName} 
                 onOpenLocationModal={() => setIsLocationModalOpen(true)} 
+                onBack={() => setActiveTab('home')}
               />
             )}
             {activeTab === 'topic' && <TopicSearchView onSelectVerse={(num, ayahNum) => handleSurahClick(num, ayahNum)} />}

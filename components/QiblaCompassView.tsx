@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Compass, Navigation, MapPin, RotateCcw, CheckCircle2, 
-  Sparkles, Info, Shield, ArrowUp, RefreshCw, Smartphone
+  Compass, Navigation, MapPin, CheckCircle2, 
+  Info, ArrowUp, RefreshCw, Smartphone, ArrowLeft, LocateFixed
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -13,6 +13,7 @@ interface QiblaCompassViewProps {
   currentCoordinates?: { lat: number; lng: number };
   locationName?: string;
   onOpenLocationModal?: () => void;
+  onBack?: () => void;
 }
 
 /**
@@ -65,17 +66,52 @@ function formatNumber(num: number | string, isBn: boolean): string {
 export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
   currentCoordinates,
   locationName: propLocationName,
-  onOpenLocationModal
+  onOpenLocationModal,
+  onBack
 }) => {
   const { language, coordinates: contextCoords, locationName: contextLocName } = useApp();
   const isBn = language === 'bn';
 
-  // Use props coordinates or fallback to context / Dhaka default
-  const activeLat = currentCoordinates?.lat || contextCoords?.lat || 23.8103;
-  const activeLng = currentCoordinates?.lng || contextCoords?.lng || 90.4125;
+  // State for live GPS auto-location
+  const [liveCoords, setLiveCoords] = useState<{ lat: number; lng: number } | null>(
+    currentCoordinates || (contextCoords ? { lat: contextCoords.lat, lng: contextCoords.lng } : null)
+  );
+  const [isLocating, setIsLocating] = useState<boolean>(false);
+  const [geoSource, setGeoSource] = useState<'gps' | 'manual' | 'default'>('default');
+
+  // Automatic GPS Geolocation fetch
+  const fetchAutoGeolocation = () => {
+    if (typeof navigator !== 'undefined' && 'geolocation' in navigator) {
+      setIsLocating(true);
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const newCoords = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          };
+          setLiveCoords(newCoords);
+          setIsLocating(false);
+          setGeoSource('gps');
+        },
+        (err) => {
+          console.warn('Geolocation error in QiblaCompass:', err);
+          setIsLocating(false);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+      );
+    }
+  };
+
+  useEffect(() => {
+    fetchAutoGeolocation();
+  }, []);
+
+  // Use live GPS coordinates or props coordinates or context / Dhaka fallback
+  const activeLat = liveCoords?.lat || currentCoordinates?.lat || contextCoords?.lat || 23.8103;
+  const activeLng = liveCoords?.lng || currentCoordinates?.lng || contextCoords?.lng || 90.4125;
   const activeLocation = propLocationName || contextLocName || (isBn ? 'ঢাকা, বাংলাদেশ' : 'Dhaka, Bangladesh');
 
-  // Exact bearing from current coordinates to Makkah
+  // Exact bearing from active coordinates to Makkah
   const qiblaBearing = Math.round(calculateQiblaBearing(activeLat, activeLng) * 10) / 10;
   const distanceKm = calculateDistanceToKaaba(activeLat, activeLng);
 
@@ -84,7 +120,6 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
   const [hasCompassSensor, setHasCompassSensor] = useState<boolean | null>(null);
   const [manualOffset, setManualOffset] = useState<number>(0);
   const [needsPermission, setNeedsPermission] = useState<boolean>(false);
-  const [calibrated, setCalibrated] = useState<boolean>(false);
 
   // Vibration ref to prevent repeated buzzing
   const hasVibratedRef = useRef<boolean>(false);
@@ -140,7 +175,7 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
       if ((e as any).webkitCompassHeading !== undefined) {
         heading = (e as any).webkitCompassHeading;
       } else if (e.alpha !== null) {
-        // Android standard absolute / non-absolute orientation
+        // Android standard orientation
         heading = (360 - e.alpha) % 360;
       }
 
@@ -148,7 +183,6 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
         if (!sensorTriggered) {
           sensorTriggered = true;
           setHasCompassSensor(true);
-          setCalibrated(true);
         }
         setDeviceHeading(Math.round(heading));
       }
@@ -165,7 +199,6 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
       setHasCompassSensor(false);
     }
 
-    // Safety timeout: if after 2.5s no sensor event fired, fallback to manual dial
     const timer = setTimeout(() => {
       if (!sensorTriggered) {
         setHasCompassSensor(false);
@@ -187,7 +220,7 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
   // Cardinal direction text
   const getCardinalName = (deg: number) => {
     const val = (deg + 360) % 360;
-    if (val >= 337.5 || val < 22.5) return isBn ? 'উত্তর (North - ০°)' : 'North (০°)';
+    if (val >= 337.5 || val < 22.5) return isBn ? 'উত্তর (North - ০°)' : 'North (0°)';
     if (val >= 22.5 && val < 67.5) return isBn ? 'উত্তর-পূর্ব (North-East - ৪৫°)' : 'North-East (45°)';
     if (val >= 67.5 && val < 112.5) return isBn ? 'পূর্ব (East - ৯০°)' : 'East (90°)';
     if (val >= 112.5 && val < 157.5) return isBn ? 'দক্ষিণ-পূর্ব (South-East - ১৩৫°)' : 'South-East (135°)';
@@ -199,6 +232,29 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
 
   return (
     <div className="space-y-6 pb-20 max-w-2xl mx-auto px-4">
+      {/* Navigation Top Header Bar with Back Button */}
+      <div className="flex items-center justify-between gap-3 pt-2">
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-800 hover:bg-emerald-600 hover:text-white border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-bold text-sm transition-all shadow-md active:scale-95 group"
+            aria-label={isBn ? 'ফিরে যান' : 'Back'}
+          >
+            <ArrowLeft size={20} className="text-emerald-600 dark:text-emerald-400 group-hover:text-white transition-colors" />
+            <span>{isBn ? 'ফিরে যান (Back)' : 'Back to Home'}</span>
+          </button>
+        )}
+
+        <button
+          onClick={fetchAutoGeolocation}
+          disabled={isLocating}
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors"
+        >
+          <LocateFixed size={16} className={`text-emerald-600 dark:text-emerald-400 ${isLocating ? 'animate-spin' : ''}`} />
+          <span>{isLocating ? (isBn ? 'জিপিএস খোঁজা হচ্ছে...' : 'Locating...') : (isBn ? 'অটো জিপিএস রিফ্রেশ' : 'Refresh GPS')}</span>
+        </button>
+      </div>
+
       {/* Header Banner */}
       <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-950 p-6 md:p-8 text-white shadow-2xl border border-emerald-500/20">
         <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -206,15 +262,15 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 backdrop-blur-md border border-emerald-400/30 text-emerald-300 text-xs font-black uppercase tracking-wider">
               <Compass className="w-3.5 h-3.5 animate-spin-slow" />
-              {isBn ? 'ডিজিটাল ক্বিবলা ফাইন্ডার' : 'Qibla & Kaaba Compass'}
+              {isBn ? 'অটোমেটিক ক্বিবলা ফাইন্ডার' : 'Auto GPS Qibla Compass'}
             </div>
             <h2 className="text-2xl md:text-3xl font-black text-emerald-100 tracking-tight">
               {isBn ? 'পবিত্র কা\'বা ও ক্বিবলা কম্পাস' : 'Accurate Qibla Direction'}
             </h2>
             <p className="text-xs md:text-sm text-emerald-100/80 leading-relaxed">
               {isBn 
-                ? 'উত্তর, দক্ষিণ, পূর্ব, পশ্চিম এবং মক্কার পবিত্র কাবা শরীফের সঠিক দিক ও কোণ নির্দেশনা।'
-                : 'Live magnetic compass with accurate Kaaba bearing, cardinal points, and distance.'}
+                ? 'অটোমেটিক জিপিএস লোকেশন থেকে উত্তর, দক্ষিণ, পূর্ব, পশ্চিম ও পবিত্র কাবা শরীফের দিকে সঠিক নামাজের ক্বিবলা নির্দেশন।'
+                : 'Auto GPS location pinpoints exact Kaaba bearing and cardinal directions for prayer.'}
             </p>
           </div>
 
@@ -238,15 +294,20 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
             <MapPin size={14} className="text-amber-400" />
             <span className="font-bold">{activeLocation}</span>
             <span className="text-emerald-300/60 font-mono text-[11px]">
-              ({formatNumber(activeLat.toFixed(2), isBn)}°, {formatNumber(activeLng.toFixed(2), isBn)}°)
+              ({formatNumber(activeLat.toFixed(4), isBn)}°, {formatNumber(activeLng.toFixed(4), isBn)}°)
             </span>
+            {geoSource === 'gps' && (
+              <span className="ml-1 px-1.5 py-0.5 rounded-full bg-emerald-500/30 text-[10px] text-emerald-300 font-bold border border-emerald-400/30">
+                {isBn ? 'জিপিএস কানেক্টেড' : 'GPS Live'}
+              </span>
+            )}
           </div>
           {onOpenLocationModal && (
             <button
               onClick={onOpenLocationModal}
               className="text-[11px] text-amber-300 hover:text-amber-200 underline font-bold transition-colors"
             >
-              {isBn ? 'স্থান পরিবর্তন করুন' : 'Change Location'}
+              {isBn ? 'ম্যানুয়ালি স্থান পরিবর্তন' : 'Change City'}
             </button>
           )}
         </div>
@@ -281,7 +342,7 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
           {isAligned ? (
             <>
               <CheckCircle2 className="w-5 h-5 text-emerald-500 animate-pulse" />
-              <span>{isBn ? 'মাশাআল্লাহ! আপনি ঠিক ক্বিবলামুখী আছেন' : 'Aligned with Qibla!'}</span>
+              <span>{isBn ? 'মাশাআল্লাহ! আপনি ঠিক ক্বিবলামুখী (কা\'বার দিকে) আছেন' : 'Aligned directly with Kaaba!'}</span>
             </>
           ) : (
             <>
@@ -378,7 +439,7 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
             </div>
           </div>
 
-          {/* Center Hub & Fixed Device Heading Needle (Always points to device top) */}
+          {/* Center Hub & Fixed Device Heading Needle */}
           <div className="absolute z-20 flex flex-col items-center justify-center pointer-events-none">
             {/* Top Indicator Arrow */}
             <div className="-mt-16 mb-2">
