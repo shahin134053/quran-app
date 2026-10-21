@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">Al-Shahin Quran</string>
     <string name="title_activity_main">Al-Shahin Quran</string>
-    <string name="package_name">com.almuneer.quran</string>
-    <string name="custom_url_scheme">com.almuneer.quran</string>
+    <string name="package_name">com.alshahin.quranapp</string>
+    <string name="custom_url_scheme">com.alshahin.quranapp</string>
 </resources>

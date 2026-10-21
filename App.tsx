@@ -31,6 +31,8 @@ import { AsmaulHusnaView } from './components/AsmaulHusnaView';
 import { ZakatCalculatorView } from './components/ZakatCalculatorView';
 import { FridayJummahHub } from './components/FridayJummahHub';
 import { NearbyMosquesView } from './components/NearbyMosquesView';
+import { HifzCompanionView } from './components/HifzCompanionView';
+import { TopicSearchView } from './components/TopicSearchView';
 import { PrayerDuaCard } from './components/PrayerDuaCard';
 import { AyahSocialCardModal, AyahCardData } from './components/AyahSocialCardModal';
 import { AnimatedSplashScreen } from './components/AnimatedSplashScreen';
@@ -1245,6 +1247,8 @@ const AppContent: React.FC = () => {
 
       <div className="grid grid-cols-2 gap-4">
         {[
+          { id: 'hifz', icon: Brain, label: language === 'bn' ? 'হিফজ ও আত্ম-পরীক্ষা' : 'Hifz Companion', color: 'emerald' },
+          { id: 'topic', icon: Sparkles, label: language === 'bn' ? 'বিষয়ভিত্তিক কুরআন' : 'Topic Search', color: 'teal' },
           { id: 'nearby-mosques', icon: MapPin, label: language === 'bn' ? 'কাছের মসজিদ (৩০০ কিমি)' : 'Nearby Mosques', color: 'teal' },
           { id: 'guide', icon: HelpCircle, label: language === 'bn' ? 'ব্যবহার নির্দেশিকা' : 'App Guide', color: 'blue' },
           { id: 'jummah', icon: Calendar, label: language === 'bn' ? 'জুমার আমল' : 'Jummah Hub', color: 'amber' },
@@ -3018,12 +3022,14 @@ const AppContent: React.FC = () => {
       <Layout 
         activeTab={activeTab} 
         setActiveTab={(tab) => { setActiveTab(tab); setSelectedSurah(null); }} 
-        hideNav={!!selectedSurah || ['developer', 'donation', 'tasbih', 'games', 'ramadan', 'duas', 'khatam', 'names99', 'zakat', 'jummah', 'nearby-mosques'].includes(activeTab)}
+        hideNav={!!selectedSurah || ['developer', 'donation', 'tasbih', 'games', 'ramadan', 'duas', 'khatam', 'names99', 'zakat', 'jummah', 'nearby-mosques', 'hifz', 'topic'].includes(activeTab)}
       >
       <AnimatePresence mode="wait">
         {selectedSurah ? renderSurahDetail() : (
           <div className="pb-8" key="main-content">
             {activeTab === 'home' && renderHome()}
+            {activeTab === 'hifz' && <HifzCompanionView onSelectSurahForReading={(num) => handleSurahClick(num)} />}
+            {activeTab === 'topic' && <TopicSearchView onSelectVerse={(num, ayahNum) => handleSurahClick(num, ayahNum)} />}
             {activeTab === 'ramadan' && (
               <RamadanDedicatedView 
                 setActiveTab={setActiveTab} 

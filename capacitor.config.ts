@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.almuneer.quran',
+  appId: 'com.alshahin.quranapp',
   appName: 'Al-Shahin Quran',
   webDir: 'dist',
   server: {
