@@ -82,7 +82,7 @@ define(['./workbox-ca84f546'], (function (workbox) { 'use strict';
     "revision": "1872c500de691dce40960bb85481de07"
   }, {
     "url": "index.html",
-    "revision": "3513e35290f038132a6158b22e1bc13a"
+    "revision": "64c1472985cf3a2679bbfb6848ca1a4b"
   }, {
     "url": "icon.svg",
     "revision": "d3f411bebfe29f058d37c23be18755bd"
@@ -99,13 +99,13 @@ define(['./workbox-ca84f546'], (function (workbox) { 'use strict';
     "url": "assets/purify.es-CAi2OJFm.js",
     "revision": null
   }, {
-    "url": "assets/index.es-BM0-Pxlx.js",
+    "url": "assets/index.es-DjA2FL6A.js",
     "revision": null
   }, {
-    "url": "assets/index-DWi_8h--.css",
+    "url": "assets/index-DsscKzf-.css",
     "revision": null
   }, {
-    "url": "assets/index-B-NETHWe.js",
+    "url": "assets/index-DfZQjJyy.js",
     "revision": null
   }, {
     "url": "assets/html2canvas.esm-QH1iLAAe.js",

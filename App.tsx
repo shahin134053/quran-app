@@ -10,7 +10,7 @@ import {
   ChevronRight, Search, Bookmark as BookmarkIcon, 
   Settings as SettingsIcon, Play, BookOpen, 
   ArrowLeft, Plus, Minus, Moon, Sun, BookmarkCheck,
-  Globe, LayoutGrid, Sliders, X, Clock, MapPin, Calendar, Headphones, Quote, RefreshCw, Info, ChevronDown, ChevronUp, User, Download, HardDrive, Trash2, CheckCircle2, Heart, Code, Mail, Copy, Activity, Brain, ArrowUpCircle, Sparkles, Palette, Bell, BellRing, Send, ShieldCheck, Bookmark, Calculator, Target, HelpCircle, Lock
+  Globe, LayoutGrid, Sliders, X, Clock, MapPin, Calendar, Headphones, Quote, RefreshCw, Info, ChevronDown, ChevronUp, User, Download, HardDrive, Trash2, CheckCircle2, Heart, Code, Mail, Copy, Activity, Brain, ArrowUpCircle, Sparkles, Palette, Bell, BellRing, Send, ShieldCheck, Bookmark, Calculator, Target, HelpCircle, Lock, Compass
 } from 'lucide-react';
 import AudioPlayer from './components/AudioPlayer';
 import TasbihView from './components/TasbihView';
@@ -31,7 +31,7 @@ import { AsmaulHusnaView } from './components/AsmaulHusnaView';
 import { ZakatCalculatorView } from './components/ZakatCalculatorView';
 import { FridayJummahHub } from './components/FridayJummahHub';
 import { NearbyMosquesView } from './components/NearbyMosquesView';
-import { HifzCompanionView } from './components/HifzCompanionView';
+import { QiblaCompassView } from './components/QiblaCompassView';
 import { TopicSearchView } from './components/TopicSearchView';
 import { PrayerDuaCard } from './components/PrayerDuaCard';
 import { AyahSocialCardModal, AyahCardData } from './components/AyahSocialCardModal';
@@ -1247,7 +1247,7 @@ const AppContent: React.FC = () => {
 
       <div className="grid grid-cols-2 gap-4">
         {[
-          { id: 'hifz', icon: Brain, label: language === 'bn' ? 'হিফজ ও আত্ম-পরীক্ষা' : 'Hifz Companion', color: 'emerald' },
+          { id: 'qibla', icon: Compass, label: language === 'bn' ? 'ক্বিবলা ও কা\'বা কম্পাস' : 'Qibla Compass', color: 'emerald' },
           { id: 'topic', icon: Sparkles, label: language === 'bn' ? 'বিষয়ভিত্তিক কুরআন' : 'Topic Search', color: 'teal' },
           { id: 'nearby-mosques', icon: MapPin, label: language === 'bn' ? 'কাছের মসজিদ (৩০০ কিমি)' : 'Nearby Mosques', color: 'teal' },
           { id: 'guide', icon: HelpCircle, label: language === 'bn' ? 'ব্যবহার নির্দেশিকা' : 'App Guide', color: 'blue' },
@@ -3022,13 +3022,19 @@ const AppContent: React.FC = () => {
       <Layout 
         activeTab={activeTab} 
         setActiveTab={(tab) => { setActiveTab(tab); setSelectedSurah(null); }} 
-        hideNav={!!selectedSurah || ['developer', 'donation', 'tasbih', 'games', 'ramadan', 'duas', 'khatam', 'names99', 'zakat', 'jummah', 'nearby-mosques', 'hifz', 'topic'].includes(activeTab)}
+        hideNav={!!selectedSurah || ['developer', 'donation', 'tasbih', 'games', 'ramadan', 'duas', 'khatam', 'names99', 'zakat', 'jummah', 'nearby-mosques', 'qibla', 'topic'].includes(activeTab)}
       >
       <AnimatePresence mode="wait">
         {selectedSurah ? renderSurahDetail() : (
           <div className="pb-8" key="main-content">
             {activeTab === 'home' && renderHome()}
-            {activeTab === 'hifz' && <HifzCompanionView onSelectSurahForReading={(num) => handleSurahClick(num)} />}
+            {activeTab === 'qibla' && (
+              <QiblaCompassView 
+                currentCoordinates={userCoordinates} 
+                locationName={locationName} 
+                onOpenLocationModal={() => setIsLocationModalOpen(true)} 
+              />
+            )}
             {activeTab === 'topic' && <TopicSearchView onSelectVerse={(num, ayahNum) => handleSurahClick(num, ayahNum)} />}
             {activeTab === 'ramadan' && (
               <RamadanDedicatedView 
