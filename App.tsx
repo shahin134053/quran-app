@@ -3034,6 +3034,7 @@ const AppContent: React.FC = () => {
                 locationName={locationName} 
                 onOpenLocationModal={() => setIsLocationModalOpen(true)} 
                 onBack={() => setActiveTab('home')}
+                onOpenMosques={() => setActiveTab('nearby-mosques')}
               />
             )}
             {activeTab === 'topic' && <TopicSearchView onSelectVerse={(num, ayahNum) => handleSurahClick(num, ayahNum)} />}
@@ -3065,6 +3066,7 @@ const AppContent: React.FC = () => {
                   setUserCoordinates(coords);
                   if (name) setLocationName(name);
                 }}
+                onOpenQibla={() => setActiveTab('qibla')}
               />
             )}
             {activeTab === 'settings' && renderSettings()}

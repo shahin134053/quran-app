@@ -21,6 +21,7 @@ export interface NearbyMosquesViewProps {
   userLocationName?: string;
   userCoordinates?: { lat: number; lng: number };
   onUpdateLocation?: (coords: { lat: number; lng: number }, name?: string) => void;
+  onOpenQibla?: () => void;
 }
 
 const MOSQUE_LOCALES: Record<string, {
@@ -274,7 +275,8 @@ export const NearbyMosquesView: React.FC<NearbyMosquesViewProps> = ({
   onBack, 
   userLocationName, 
   userCoordinates, 
-  onUpdateLocation 
+  onUpdateLocation,
+  onOpenQibla
 }) => {
   const { language, activeThemeConfig, simulatedLocation, setSimulatedLocation } = useApp();
   const langKey = MOSQUE_LOCALES[language] ? language : 'bn';
@@ -633,7 +635,19 @@ export const NearbyMosquesView: React.FC<NearbyMosquesViewProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 self-end sm:self-auto">
+        <div className="flex flex-wrap items-center gap-2 self-end sm:self-auto">
+          {/* Qibla Compass Link Button */}
+          {onOpenQibla && (
+            <button
+              onClick={onOpenQibla}
+              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer border border-emerald-400/30"
+              title={isBn ? 'কাবা ও ক্বিবলা কম্পাস পেজে যান' : 'Go to Qibla Compass'}
+            >
+              <Compass size={15} className="animate-spin-slow text-amber-300 shrink-0" />
+              <span>{isBn ? 'ক্বিবলা কম্পাস' : 'Qibla Compass'}</span>
+            </button>
+          )}
+
           {/* GPS Auto-detect Button */}
           <button
             onClick={handleDetectGPS}
@@ -657,6 +671,32 @@ export const NearbyMosquesView: React.FC<NearbyMosquesViewProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Interlinked Banner to Qibla Compass */}
+      {onOpenQibla && (
+        <div className="bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-950 p-4 px-5 rounded-[2rem] border border-emerald-500/30 text-white shadow-xl flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0 text-amber-300">
+              <Compass size={20} className="animate-spin-slow" />
+            </div>
+            <div className="min-w-0">
+              <h4 className="font-black text-emerald-100 text-sm">
+                {isBn ? 'সালাতের পূর্বে পবিত্র কা\'বা ও ক্বিবলার দিক জানতে চান?' : 'Need accurate Qibla direction for prayer?'}
+              </h4>
+              <p className="text-[11px] text-emerald-200/80 truncate">
+                {isBn ? 'লাইভ জিপিএস কম্পাস দিয়ে কা\'বা শরীফের দিক নির্ধারণ করুন।' : 'Determine exact Kaaba bearing with live GPS compass.'}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onOpenQibla}
+            className="px-4 py-2.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black rounded-2xl shrink-0 text-xs shadow-lg transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+          >
+            <span>{isBn ? 'ক্বিবলা কম্পাস দেখুন' : 'Open Qibla Compass'}</span>
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      )}
 
       {/* Simulated Location Admin Banner (if active) */}
       {simulatedLocation?.isActive && (

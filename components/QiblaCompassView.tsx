@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Compass, Navigation, MapPin, CheckCircle2, 
-  Info, ArrowUp, RefreshCw, Smartphone, ArrowLeft, LocateFixed
+  Info, ArrowUp, RefreshCw, Smartphone, ArrowLeft, LocateFixed, ChevronRight
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -14,6 +14,7 @@ interface QiblaCompassViewProps {
   locationName?: string;
   onOpenLocationModal?: () => void;
   onBack?: () => void;
+  onOpenMosques?: () => void;
 }
 
 /**
@@ -67,7 +68,8 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
   currentCoordinates,
   locationName: propLocationName,
   onOpenLocationModal,
-  onBack
+  onBack,
+  onOpenMosques
 }) => {
   const { language, coordinates: contextCoords, locationName: contextLocName } = useApp();
   const isBn = language === 'bn';
@@ -232,28 +234,67 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
 
   return (
     <div className="space-y-6 pb-20 max-w-2xl mx-auto px-4">
-      {/* Navigation Top Header Bar with Back Button */}
-      <div className="flex items-center justify-between gap-3 pt-2">
-        {onBack && (
-          <button
-            onClick={onBack}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-800 hover:bg-emerald-600 hover:text-white border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-bold text-sm transition-all shadow-md active:scale-95 group"
-            aria-label={isBn ? 'ফিরে যান' : 'Back'}
-          >
-            <ArrowLeft size={20} className="text-emerald-600 dark:text-emerald-400 group-hover:text-white transition-colors" />
-            <span>{isBn ? 'ফিরে যান (Back)' : 'Back to Home'}</span>
-          </button>
-        )}
+      {/* Navigation Top Header Bar with Back Button and Nearby Mosques Link */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <div className="flex items-center gap-2">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-800 hover:bg-emerald-600 hover:text-white border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-bold text-sm transition-all shadow-md active:scale-95 group cursor-pointer"
+              aria-label={isBn ? 'ফিরে যান' : 'Back'}
+            >
+              <ArrowLeft size={20} className="text-emerald-600 dark:text-emerald-400 group-hover:text-white transition-colors" />
+              <span>{isBn ? 'ফিরে যান (Back)' : 'Back to Home'}</span>
+            </button>
+          )}
+
+          {onOpenMosques && (
+            <button
+              onClick={onOpenMosques}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-teal-600 via-emerald-600 to-teal-700 hover:from-teal-700 hover:to-emerald-700 text-white font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer border border-teal-400/30"
+              title={isBn ? 'নিকটস্থ মসজিদ পেজে যান' : 'Go to Nearby Mosques'}
+            >
+              <MapPin size={15} className="text-amber-300 shrink-0" />
+              <span>{isBn ? 'নিয়ারবাই মসজিদ' : 'Nearby Mosques'}</span>
+            </button>
+          )}
+        </div>
 
         <button
           onClick={fetchAutoGeolocation}
           disabled={isLocating}
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors cursor-pointer"
         >
           <LocateFixed size={16} className={`text-emerald-600 dark:text-emerald-400 ${isLocating ? 'animate-spin' : ''}`} />
-          <span>{isLocating ? (isBn ? 'জিপিএস খোঁজা হচ্ছে...' : 'Locating...') : (isBn ? 'অটো জিপিএস রিফ্রেশ' : 'Refresh GPS')}</span>
+          <span>{isLocating ? (isBn ? 'শনাক্ত হচ্ছে...' : 'Locating...') : (isBn ? 'জিপিএস অটো' : 'Auto GPS')}</span>
         </button>
       </div>
+
+      {/* Interlinked Banner to Nearby Mosques */}
+      {onOpenMosques && (
+        <div className="bg-gradient-to-r from-teal-950 via-emerald-950 to-slate-950 p-4 px-5 rounded-[2rem] border border-teal-500/30 text-white shadow-xl flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-2xl bg-teal-500/20 border border-teal-400/30 flex items-center justify-center shrink-0 text-teal-300">
+              <MapPin size={20} />
+            </div>
+            <div className="min-w-0">
+              <h4 className="font-black text-teal-100 text-sm">
+                {isBn ? 'ক্বিবলা ঠিক করার পর সালাতের জন্য কাছের মসজিদ খুঁজছেন?' : 'Need to locate a nearby mosque for prayer?'}
+              </h4>
+              <p className="text-[11px] text-teal-200/80 truncate">
+                {isBn ? 'আপনার ৩০০ গজ থেকে ৩০ কিমি ব্যাসার্ধের সকল কাছের মসজিদ ও দিকনির্দেশনা।' : 'Find mosques within 300yd - 30km radius with turn-by-turn navigation.'}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onOpenMosques}
+            className="px-4 py-2.5 bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-300 hover:to-emerald-300 text-slate-950 font-black rounded-2xl shrink-0 text-xs shadow-lg transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+          >
+            <span>{isBn ? 'নিয়ারবাই মসজিদ দেখুন' : 'View Nearby Mosques'}</span>
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      )}
 
       {/* Header Banner */}
       <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-950 p-6 md:p-8 text-white shadow-2xl border border-emerald-500/20">
