@@ -3,24 +3,25 @@
 # 📖 আল-শাহীন কুরআন (Al-Shahin Quran)
 ### সর্বাধুনিক, ডিজিটাল ও বৈশিষ্ট্যমণ্ডিত ইসলামিক মোবাইল অ্যাপ্লিকেশন (ভার্সন ৩.১.০)
 
-[![Latest Release](https://img.shields.io/badge/Release-v3.1.0%20(Latest)-059669?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahin134053/quran-app/releases/latest)
-[![Direct APK Download](https://img.shields.io/badge/Download-APK%20(Android)-10b981?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.apk)
-[![Play Store Bundle](https://img.shields.io/badge/Download-AAB%20(Play%20Store)-2563eb?style=for-the-badge&logo=googleplay&logoColor=white)](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.aab)
-[![iOS WebApp Bundle](https://img.shields.io/badge/Download-iOS%20%2F%20PWA%20Package-9333ea?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-iOS-WebApp.zip)
+[![Direct APK Download](https://img.shields.io/badge/1st%20Priority-Download%20APK%20(Android)-10b981?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.apk)
+[![Play Store Bundle](https://img.shields.io/badge/2nd%20Priority-Download%20AAB%20(Play%20Store)-2563eb?style=for-the-badge&logo=googleplay&logoColor=white)](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.aab)
+[![Live Web App](https://img.shields.io/badge/Live%20Web%20App-Launch%20Now-f59e0b?style=for-the-badge&logo=googlechrome&logoColor=white)](https://ais-pre-imxb6mqmlxvczynoghedin-115405497061.asia-east1.run.app)
+[![iOS WebApp Bundle](https://img.shields.io/badge/iPhone%20%2F%20PWA-Download%20Package-9333ea?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-iOS-WebApp.zip)
 
 </div>
 
 ---
 
-## 📥 সরাসরি অ্যাপ ডাউনলোড লিংক (Download Latest Version v3.1.0)
+## 📥 সরাসরি অ্যাপ ডাউনলোড ও লাইভ লিঙ্ক (Downloads & Live App):
 
-যে কেউ নিচের লিংকে ক্লিক করে সরাসরি অ্যাপটির সর্বশেষ সংস্করণ ডাউনলোড করে ব্যবহার করতে পারবেন। এখানে সবসময় স্বয়ংক্রিয়ভাবে সর্বশেষ (Latest Version v3.1.0) পিন করা থাকবে:
+নিচের তালিকা থেকে আপনার প্রয়োজনীয় ফাইলটি ডাউনলোড করুন অথবা সরাসরি লাইভ ওয়েব অ্যাপ্লিকেশনটি যেকোনো ব্রাউজারে চালু করুন:
 
-| ফাইল / সংস্করণ | বিবরণ ও প্ল্যাটফর্ম | সরাসরি এক-ক্লিক ডাউনলোড |
+| অগ্রাধিকার ও ফাইল | প্ল্যাটফর্ম ও বিবরণ | সরাসরি লিংক / ডাউনলোড |
 | :--- | :--- | :--- |
-| 📲 **Android APK** | অ্যান্ড্রয়েড ফোনের জন্য অফিসিয়াল সাইনড রিলিজ APK (~৪.২ MB)। Uptodown / APKPure এবং সরাসরি ফোনে ব্যবহারের জন্য উপযুক্ত। | [⬇️ **Download Latest APK (v3.1.0)**](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.apk) |
-| 📦 **Play Store AAB** | গুগল প্লে স্টোর ও অ্যাপ স্টোরে আপলোডের জন্য সাইনড অ্যান্ড্রয়েড অ্যাপ বান্ডেল (~৪.০ MB) | [⬇️ **Download Latest AAB (v3.1.0)**](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.aab) |
-| 🍎 **iPhone / Web PWA** | আইফোনের জন্য অফলাইন PWA ও ওয়েব অ্যাপ্লিকেশন প্যাকেজ (~১.০ MB) | [⬇️ **Download iOS WebApp Bundle**](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-iOS-WebApp.zip) |
+| 🥇 **১. এপিকে ফাইল (APK File - 1st Priority)** | অ্যান্ড্রয়েড ফোনে সরাসরি ইনস্টল করার জন্য সাইনড রিলিজ APK (~৪.২ MB)। Uptodown, APKPure ও সরাসরি ইনস্টলেশনের জন্য প্রস্তুত। | [⬇️ **Download Latest APK (v3.1.0)**](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.apk) |
+| 🥈 **২. এবি ফাইল (AAB Bundle - 2nd Priority)** | গুগল প্লে স্টোর (Google Play Console) ও স্টোরে প্রকাশের জন্য সাইনড অ্যান্ড্রয়েড অ্যাপ বান্ডেল (~৪.০ MB) | [⬇️ **Download Latest AAB (v3.1.0)**](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.aab) |
+| 🌐 **৩. লাইভ ওয়েব অ্যাপ (Live Web App Launching)** | কোনো ইনস্টলেশন ছাড়াই কম্পিউটার, ল্যাপটপ, ট্যাবলেট বা যেকোনো মোবাইল ব্রাউজারে সরাসরি লাইভ চালু করুন। | [🚀 **Launch Live Web App**](https://ais-pre-imxb6mqmlxvczynoghedin-115405497061.asia-east1.run.app) |
+| 🍎 **৪. আইফোন ও PWA প্যাকেজ (iOS / Offline PWA)** | আইফোন (Safari) ও অফলাইন ব্রাউজিংয়ের জন্য তৈরি জিপ আর্কাইভ প্যাকেজ (~১.০ MB) | [⬇️ **Download iOS WebApp Package**](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-iOS-WebApp.zip) |
 
 🔗 **[📌 অফিসিয়াল গিটহাব রিলিজ পাতা ও পরিবর্তনের বিবরণী দেখুন](https://github.com/shahin134053/quran-app/releases/latest)**
 

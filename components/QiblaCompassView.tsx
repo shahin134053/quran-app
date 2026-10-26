@@ -71,8 +71,10 @@ export const QiblaCompassView: React.FC<QiblaCompassViewProps> = ({
   onBack,
   onOpenMosques
 }) => {
-  const { language, coordinates: contextCoords, locationName: contextLocName } = useApp();
+  const { language, simulatedLocation } = useApp();
   const isBn = language === 'bn';
+  const contextCoords = simulatedLocation ? { lat: simulatedLocation.lat, lng: simulatedLocation.lng } : null;
+  const contextLocName = simulatedLocation?.name;
 
   // State for live GPS auto-location
   const [liveCoords, setLiveCoords] = useState<{ lat: number; lng: number } | null>(

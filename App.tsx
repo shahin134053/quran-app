@@ -10,7 +10,7 @@ import {
   ChevronRight, Search, Bookmark as BookmarkIcon, 
   Settings as SettingsIcon, Play, BookOpen, 
   ArrowLeft, Plus, Minus, Moon, Sun, BookmarkCheck,
-  Globe, LayoutGrid, Sliders, X, Clock, MapPin, Calendar, Headphones, Quote, RefreshCw, Info, ChevronDown, ChevronUp, User, Download, HardDrive, Trash2, CheckCircle2, Heart, Code, Mail, Copy, Activity, Brain, ArrowUpCircle, Sparkles, Palette, Bell, BellRing, Send, ShieldCheck, Bookmark, Calculator, Target, HelpCircle, Lock, Compass
+  Globe, LayoutGrid, Sliders, X, Clock, MapPin, Calendar, Headphones, Quote, RefreshCw, Info, ChevronDown, ChevronUp, User, Download, HardDrive, Trash2, CheckCircle2, Heart, Code, Mail, Copy, Activity, Brain, ArrowUpCircle, Sparkles, Palette, Bell, BellRing, Send, ShieldCheck, Bookmark, Calculator, Target, HelpCircle, Lock, Compass, Coffee
 } from 'lucide-react';
 import AudioPlayer from './components/AudioPlayer';
 import TasbihView from './components/TasbihView';
@@ -1262,7 +1262,7 @@ const AppContent: React.FC = () => {
           { id: 'tasbih', icon: Activity, label: t.tasbih, color: 'purple' },
           { id: 'games', icon: Brain, label: t.games, color: 'indigo' },
           { id: 'developer', icon: Code, label: t.developerInfo, color: 'blue' },
-          { id: 'donation', icon: Heart, label: t.donation, color: 'pink' }
+          { id: 'donation', icon: Coffee, label: t.donation, color: 'amber' }
         ].map((item, idx) => {
           const isRamadanHighlight = item.id === 'ramadan' && isCurrentlyRamadan;
           return (
@@ -2655,15 +2655,15 @@ const AppContent: React.FC = () => {
 
              <button onClick={() => { setPreviousTab('settings'); setActiveTab('donation'); }} className="w-full flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-900 rounded-[1.5rem] group active:scale-[0.98] transition-all hover:bg-slate-100 dark:hover:bg-slate-800">
                <div className="flex items-center gap-4">
-                 <div className="w-10 h-10 bg-pink-100 dark:bg-pink-900/40 rounded-xl flex items-center justify-center text-pink-600">
-                   <Heart size={18} />
+                 <div className="w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-xl flex items-center justify-center text-amber-600">
+                   <Coffee size={18} />
                  </div>
                  <div className="text-left">
                    <h4 className="font-black text-sm text-slate-800 dark:text-slate-100">{t.donation}</h4>
-                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Support Us</p>
+                   <p className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">Buy Me a Coffee ☕</p>
                  </div>
                </div>
-               <div className="p-2 bg-white dark:bg-slate-800 rounded-full text-slate-400 group-hover:text-pink-500 transition-colors">
+               <div className="p-2 bg-white dark:bg-slate-800 rounded-full text-slate-400 group-hover:text-amber-500 transition-colors">
                  <ChevronRight size={18} />
                </div>
              </button>
@@ -2732,13 +2732,13 @@ const AppContent: React.FC = () => {
             </a>
           </div>
 
-          {/* Cross link to Support & Donation */}
+          {/* Cross link to Buy Me a Coffee */}
           <div className="pt-2 border-t border-slate-100 dark:border-slate-700/60 w-full text-center">
             <button 
               onClick={() => setActiveTab('donation')}
-              className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1.5 py-2"
+              className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline inline-flex items-center gap-1.5 py-2"
             >
-              <span>{language === 'bn' ? '❤️ অ্যাপটি তৈরিতে সহযোগিতায় অংশ নিন (সাপোর্ট অ্যান্ড ডোনেশন পেজ)' : '❤️ Support Us in Building the App (Support & Donation Page)'}</span>
+              <span>{language === 'bn' ? '☕ ডেভেলপারকে এক কাপ কফি উপহার দিন (Buy Me a Coffee)' : '☕ Buy the Developer a Coffee (Buy Me a Coffee)'}</span>
               <ChevronRight size={14} />
             </button>
           </div>
@@ -2770,13 +2770,13 @@ const AppContent: React.FC = () => {
       <motion.div 
         animate={{
           boxShadow: [
-            '0 15px 30px -5px rgba(244, 63, 94, 0.35), 0 10px 10px -5px rgba(244, 63, 94, 0.2)',
-            '0 25px 50px -12px rgba(244, 63, 94, 0.6), 0 15px 20px -5px rgba(244, 63, 94, 0.3)',
-            '0 15px 30px -5px rgba(244, 63, 94, 0.35), 0 10px 10px -5px rgba(244, 63, 94, 0.2)'
+            '0 15px 30px -5px rgba(217, 119, 6, 0.35), 0 10px 10px -5px rgba(217, 119, 6, 0.2)',
+            '0 25px 50px -12px rgba(217, 119, 6, 0.55), 0 15px 20px -5px rgba(217, 119, 6, 0.3)',
+            '0 15px 30px -5px rgba(217, 119, 6, 0.35), 0 10px 10px -5px rgba(217, 119, 6, 0.2)'
           ]
         }}
         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-        className="bg-gradient-to-br from-pink-500 via-rose-600 to-pink-700 rounded-[2.5rem] p-8 text-white shadow-xl relative overflow-hidden mb-6 border border-pink-300/40"
+        className="bg-gradient-to-br from-amber-600 via-orange-600 to-amber-700 rounded-[2.5rem] p-8 text-white shadow-xl relative overflow-hidden mb-6 border border-amber-300/40"
       >
         <motion.div 
           animate={{ x: ['-100%', '200%'] }}
@@ -2787,22 +2787,27 @@ const AppContent: React.FC = () => {
           <motion.div 
             animate={{ scale: [1, 1.15, 1] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md shadow-inner mx-auto mb-4 border border-white/30"
+            className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md shadow-inner mx-auto mb-3 border border-white/30"
           >
-            <Heart size={32} fill="currentColor" className="text-white drop-shadow-md" />
+            <Coffee size={32} className="text-white drop-shadow-md" />
           </motion.div>
-          <h3 className="text-xl font-black mb-2">{t.donateTitle}</h3>
-          <p className="text-sm font-medium opacity-95 leading-relaxed max-w-sm mx-auto">
-            {t.donateMsg} {language === 'bn' ? 'আপনার প্রতিটি সহযোগিতা সদকায়ে জারিয়া হিসেবে এই ইসলামিক প্রজেক্টকে জীবন্ত রাখতে সাহায্য করবে।' : 'Every contribution acts as Sadaqah Jariyah to keep this Islamic project alive and thriving.'}
+          
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-black uppercase tracking-wider mb-3">
+            ☕ {language === 'bn' ? 'Give Me a Coffee • ভালোবাসার উপহার' : 'Give Me a Coffee • Fuel the Development'}
+          </div>
+
+          <h3 className="text-2xl font-black mb-2">{t.donateTitle}</h3>
+          <p className="text-sm font-medium opacity-95 leading-relaxed max-w-md mx-auto">
+            {t.donateMsg}
           </p>
         </div>
-        <Heart className="absolute -bottom-10 -right-10 w-48 h-48 text-white/10 rotate-12 pointer-events-none" fill="currentColor" />
+        <Coffee className="absolute -bottom-10 -right-10 w-48 h-48 text-white/10 rotate-12 pointer-events-none" />
       </motion.div>
 
       {/* Interactive Impact / Usage Section */}
       <div className="bg-white dark:bg-slate-800 rounded-[2.2rem] p-6 shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
         <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
-          {language === 'bn' ? '💡 আপনার সহযোগিতা কোথায় ব্যবহৃত হয়?' : '💡 Where is your support used?'}
+          {language === 'bn' ? '💡 আপনার কফি উপহার অ্যাপের কোথায় কাজে লাগে?' : '💡 How does your coffee support the app?'}
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-700/60 flex items-start gap-3">
@@ -2830,7 +2835,7 @@ const AppContent: React.FC = () => {
       </div>
 
       <div className="space-y-6 pt-2">
-        <h3 className="font-black text-xs uppercase tracking-[0.2em] text-slate-400 ml-2">{language === 'bn' ? 'পেমেন্ট পদ্ধতিসমূহ' : 'Payment Methods'}</h3>
+        <h3 className="font-black text-xs uppercase tracking-[0.2em] text-slate-400 ml-2">{language === 'bn' ? 'কফি উপহার পাঠানোর মাধ্যমসমূহ' : 'Payment Methods to Send Support'}</h3>
         
         {/* bKash */}
         <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] shadow-sm border border-pink-100 dark:border-pink-900/20 flex items-center justify-between group hover:shadow-md transition-all">
@@ -2998,7 +3003,7 @@ const AppContent: React.FC = () => {
          <div>
            <button 
              onClick={() => setActiveTab('developer')}
-             className="text-xs font-bold text-pink-600 dark:text-pink-400 hover:underline inline-flex items-center gap-1.5 py-1"
+             className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline inline-flex items-center gap-1.5 py-1"
            >
              <span>{language === 'bn' ? '👨‍💻 ডেভেলপার সম্পর্কে বিস্তারিত জানুন (ডেভেলপার ইনফো)' : '👨‍💻 Learn more about Developer (Developer Info)'}</span>
              <ChevronRight size={14} />
