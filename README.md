@@ -1,7 +1,7 @@
 <div align="center">
 
 # 📖 আল-শাহীন কুরআন (Al-Shahin Quran)
-### সর্বাধুনিক, ডিজিটাল ও বৈশিষ্ট্যমণ্ডিত ইসলামিক মোবাইল অ্যাপ্লিকেশন (ভার্সন ৩.১.০)
+### সর্বাধুনিক, ডিজিটাল ও বৈশিষ্ট্যমণ্ডিত ইসলামিক মোবাইল অ্যাপ্লিকেশন (ভার্সন ৩.১.১)
 
 [![লাইভ লঞ্চ ওয়েব অ্যাপ](https://img.shields.io/badge/%F0%9F%8C%90%20%E0%A6%B2%E0%A6%BE%E0%A6%87%E0%A6%AD%20%E0%A6%B2%E0%A6%9E%E0%A7%8D%E0%A6%9A%20%E0%A6%93%E0%A7%9F%E0%A7%87%E0%A6%AC%20%E0%A6%8F%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%AA-Launch%20Live%20Web%20App-f59e0b?style=for-the-badge&logo=googlechrome&logoColor=white)](https://ais-pre-imxb6mqmlxvczynoghedin-115405497061.asia-east1.run.app/)
 [![Direct APK Download](https://img.shields.io/badge/1st%20Priority-Download%20APK%20(Android)-10b981?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.apk)
@@ -32,10 +32,10 @@
 
 | ফাইল ও প্ল্যাটফর্ম | সংস্করণ | সাইজ | অগ্রাধিকার ও বর্ণনা | সরাসরি ডাউনলোড লিংক |
 | :--- | :--- | :--- | :--- | :--- |
-| **🤖 Al-Shahin Quran APK** | v1.2.0 | ~25 MB | **১ম অগ্রাধিকার (Android)** - সরাসরি ফোনে ইনস্টলযোগ্য | [📥 Download APK](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.apk) |
-| **📦 Android App Bundle (AAB)** | v1.2.0 | ~18 MB | **২য় অগ্রাধিকার (Google Play)** - প্লে স্টোর আপলোড প্যাকেজ | [📦 Download AAB](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.aab) |
-| **🍎 iPhone & iPad (iOS)** | v1.2.0 | Cloud / PWA | **আইফোন ইউজারদের জন্য** - Safari Add to Home Screen | [🌐 Launch for iPhone](https://ais-pre-imxb6mqmlxvczynoghedin-115405497061.asia-east1.run.app/?source=ios_pwa) |
-| **🌐 লাইভ ওয়েব অ্যাপ্লিকেশন** | v3.1.0 | Instant | **পিসি, ল্যাপটপ ও ট্যাবলেট** ব্রাউজার সংস্করণ | [🌐 Open Web App](https://ais-pre-imxb6mqmlxvczynoghedin-115405497061.asia-east1.run.app/) |
+| **🤖 Al-Shahin Quran APK** | v3.1.1 | ~25 MB | **১ম অগ্রাধিকার (Android)** - সরাসরি ফোনে ইনস্টলযোগ্য | [📥 Download APK](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.apk) |
+| **📦 Android App Bundle (AAB)** | v3.1.1 | ~18 MB | **২য় অগ্রাধিকার (Google Play)** - প্লে স্টোর আপলোড প্যাকেজ | [📦 Download AAB](https://github.com/shahin134053/quran-app/releases/latest/download/Al-Shahin-Quran-release.aab) |
+| **🍎 iPhone & iPad (iOS)** | v3.1.1 | Cloud / PWA | **আইফোন ইউজারদের জন্য** - Safari Add to Home Screen | [🌐 Launch for iPhone](https://ais-pre-imxb6mqmlxvczynoghedin-115405497061.asia-east1.run.app/?source=ios_pwa) |
+| **🌐 লাইভ ওয়েব অ্যাপ্লিকেশন** | v3.1.1 | Instant | **পিসি, ল্যাপটপ ও ট্যাবলেট** ব্রাউজার সংস্করণ | [🌐 Open Web App](https://ais-pre-imxb6mqmlxvczynoghedin-115405497061.asia-east1.run.app/) |
 
 ---
 
